@@ -155,25 +155,62 @@
     w.addEventListener('resize', function () { if (w.innerWidth >= 1140) closeMenu(); });
   }
 
-  /* ---------- Rotating words ---------- */
+  /* ---------- Rotating words ----------
+     The incoming word rises into the pill while the outgoing one exits upward.
+     Outgoing words are reset below the pill with transitions off, so nothing
+     ever travels back through the visible area. The pill eases to each word's
+     width and changes colour. */
   $$('[data-rotator]').forEach(function (el) {
     var items = $$('span', el), i = 0;
-    var widest = 0;
-    function size() {
-      widest = 0;
-      items.forEach(function (s) { s.style.position = 'absolute'; widest = Math.max(widest, s.scrollWidth); s.style.position = ''; });
-      el.style.width = 'calc(' + widest + 'px + 1.4em)';
+    var colors = (el.getAttribute('data-colors') || '').split(',').filter(Boolean);
+    var EASE = 'cubic-bezier(.16,1,.3,1)';
+    function fit(s) {
+      var cs = getComputedStyle(el);
+      el.style.width = (s.getBoundingClientRect().width + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)) + 'px';
     }
-    size(); w.addEventListener('resize', size);
-    if (d.fonts && d.fonts.ready) d.fonts.ready.then(size);
-    if (reduce) return;
-    setInterval(function () {
+    function place(s, y, o, animate) {
+      s.style.transition = animate ? 'transform .75s ' + EASE + ', opacity .45s ease' : 'none';
+      s.style.transform = 'translateY(' + y + ')';
+      s.style.opacity = o;
+    }
+    items.forEach(function (s, k) { place(s, k === 0 ? '0%' : '115%', k === 0 ? 1 : 0, false); });
+    if (colors[0]) el.style.backgroundColor = colors[0];
+    fit(items[0]);
+    w.addEventListener('resize', function () { fit(items[i]); });
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(function () { fit(items[i]); });
+    if (reduce || items.length < 2) return;
+    var timer = null;
+    function step() {
       var cur = items[i]; i = (i + 1) % items.length; var nxt = items[i];
-      cur.classList.remove('is-active'); cur.classList.add('is-out');
-      nxt.classList.remove('is-out'); nxt.classList.add('is-active');
-      setTimeout(function () { cur.classList.remove('is-out'); }, 800);
-    }, 2200);
+      place(nxt, '115%', 0, false);   // park the next word below, invisibly
+      void nxt.offsetWidth;            // commit before animating
+      place(cur, '-115%', 0, true);
+      place(nxt, '0%', 1, true);
+      if (colors.length) el.style.backgroundColor = colors[i % colors.length];
+      fit(nxt);
+    }
+    function start() { if (!timer) timer = setInterval(step, 2400); }
+    function stop() { clearInterval(timer); timer = null; }
+    d.addEventListener('visibilitychange', function () { d.hidden ? stop() : start(); });
+    start();
   });
+
+  /* ---------- Hand-drawn doodles: draw when they scroll into view ---------- */
+  function drawDoodles() {
+    var ds = $$('.doodle');
+    if (!ds.length) return;
+    if (!('IntersectionObserver' in w) || !h.classList.contains('motion-ok')) { ds.forEach(function (x) { x.classList.add('is-drawn'); }); return; }
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var t = e.target, inHero = t.closest('.hero, .page-hero');
+        setTimeout(function () { t.classList.add('is-drawn'); }, inHero ? 900 : 350);
+        io.unobserve(t);
+      });
+    }, { threshold: .6 });
+    ds.forEach(function (x) { io.observe(x); });
+  }
+  if (HF.introDone) drawDoodles(); else d.addEventListener('hf:intro', drawDoodles, { once: true });
 
   /* ---------- Tabs (pathways, segmented controls) ---------- */
   $$('[data-tabs]').forEach(function (root) {

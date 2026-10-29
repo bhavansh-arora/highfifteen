@@ -61,7 +61,7 @@ Helpers you can use inside `_src` files:
 - `<x-img name="headshot-1" alt="…" sizes="50vw">` — responsive WebP image (see `_src/images.json`)
 - `<x-btn href="contact.html" variant="primary|mint|light|ghost">Label</x-btn>` — animated button
 - `<x-include file="cta" heading="Text with [[italic accent]]" … />` — reusable blocks
-- `{{i:arrow}}` — inline icon; `[[…]]` — serif italic accent
+- `{{i:arrow}}` — inline icon; `[[…]]` — serif italic accent; `[[~…]]` adds a hand-drawn underline, `[[@…]]` a hand-drawn circle
 
 ## Deploy
 
@@ -72,7 +72,7 @@ It is a static site: upload the repo root to Netlify, Vercel, Cloudflare Pages o
 
 - Motion: GSAP 3.12 + ScrollTrigger, Lenis smooth scroll (vendored in `assets/vendor`).
   Everything respects `prefers-reduced-motion` and still works with JavaScript off.
-- Type: Archivo (expanded), Instrument Serif, Plus Jakarta Sans, JetBrains Mono, self-hosted.
+- Type: Bricolage Grotesque (display, optical sizing), Instrument Serif italic accents, Plus Jakarta Sans (body), JetBrains Mono (labels), all self-hosted.
 - Accessibility: skip link, keyboard-friendly tabs and accordions, visible focus states, alt text.
 - SEO: unique titles and descriptions, Open Graph images, canonical URLs, JSON-LD, sitemap and robots.txt.
 - Journal cards link to the existing articles on highfifteen.com until they are migrated.

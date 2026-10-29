@@ -55,6 +55,12 @@ const icons = {
   tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5 5L22 13.6 13.6 22l-2.3-2.3a4 4 0 0 0-5-5L4 12.4 12.4 4z"/></svg>',
 };
 
+// Hand-drawn doodles: [[~word]] underlines, [[@word]] circles. Paths use pathLength=1 so CSS can draw them.
+const doodles = {
+  '~': '<svg class="doodle doodle--under" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 15 C 52 7, 112 4, 172 8 C 222 11, 262 13, 296 6"/><path pathLength="1" d="M34 21 C 104 15, 192 14, 270 18"/></svg>',
+  '@': '<svg class="doodle doodle--circle" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M172 9 C 94 1, 16 16, 9 49 C 3 82, 98 97, 178 91 C 254 85, 298 63, 291 37 C 284 13, 214 1, 116 12"/></svg>',
+};
+
 // ---------- helpers ----------
 function attrs(str) {
   const out = {};
@@ -77,7 +83,11 @@ function imgTag(a) {
   const srcset = widths.length > 1 ? ` srcset="${widths.map((w) => `${file(w)} ${w}w`).join(', ')}" sizes="${a.sizes || '100vw'}"` : '';
   const cls = a.class ? ` class="${a.class}"` : '';
   const load = a.eager ? ' fetchpriority="high"' : ' loading="lazy"';
-  const style = a.pos ? ` style="object-position:${a.pos}"` : '';
+  let style = a.pos ? ` style="object-position:${a.pos}"` : '';
+  if (a.area) { // optical sizing for logos: equal visual area, clamped height
+    const hh = Math.max(16, Math.min(+a.max || 46, Math.sqrt(+a.area / m.ar)));
+    style = ` style="height:${hh.toFixed(1)}px;width:auto"`;
+  }
   return `<img src="${file(def)}"${srcset} width="${largest}" height="${h}" alt="${esc(a.alt || '')}"${cls}${style}${load} decoding="async">`;
 }
 
@@ -108,7 +118,7 @@ function logosTag(a) {
   const set = (logoSets[a.set] || []).filter((n) => images[n]);
   const group = (hidden) => `<div class="marquee__group"${hidden ? ' aria-hidden="true"' : ''}>${set.map((n) => {
     const ar = images[n].ar; const cls = ar < 1.4 ? 'tall' : ar > 6 ? 'wide' : '';
-    return imgTag({ name: n, alt: hidden ? '' : logoAlt(n) + ' logo', class: cls });
+    return imgTag({ name: n, alt: hidden ? '' : logoAlt(n) + ' logo', area: 3000, max: 40 });
   }).join('')}</div>`;
   return `<div class="marquee" style="--marquee-speed:${a.speed || 46}s"><div class="marquee__track">${group(false)}${group(true)}</div></div>`;
 }
@@ -120,11 +130,11 @@ function render(html, vars = {}, depth = 0) {
     return render(read(`partials/${a.file}.html`), { ...vars, ...a }, depth + 1);
   });
   html = html.replace(/\{\{(\w[\w-]*)\}\}/g, (m, k) => (vars[k] !== undefined ? vars[k] : m));
-  html = html.replace(/\[\[/g, '<span class="it">').replace(/\]\]/g, '</span>');
+  html = html.replace(/\[\[([~@]?)([\s\S]*?)\]\]/g, (_, mark, text) => `<span class="it">${text}${doodles[mark] || ''}</span>`);
   html = html.replace(/\{\{i:([\w-]+)\}\}/g, (_, k) => { if (!icons[k]) throw new Error('Unknown icon ' + k); return icons[k]; });
   html = html.replace(/<x-img\s+([^>]*?)\/?>/g, (_, s) => imgTag(attrs(s)));
   html = html.replace(/<x-logos\s+([^>]*?)\/?>/g, (_, s) => logosTag(attrs(s)));
-  html = html.replace(/<x-logowall\s*\/?>/g, () => `<div class="logo-wall">${wallSet.filter((n) => images[n]).map((n) => `<div>${imgTag({ name: n, alt: logoAlt(n) + ' logo' })}</div>`).join('')}</div>`);
+  html = html.replace(/<x-logowall\s*\/?>/g, () => `<div class="logo-wall">${wallSet.filter((n) => images[n]).map((n) => `<div>${imgTag({ name: n, alt: logoAlt(n) + ' logo', area: 3400, max: 52 })}</div>`).join('')}</div>`);
   html = html.replace(/<x-btn\s*([^>]*)>([\s\S]*?)<\/x-btn>/g, (_, s, label) => btnTag(attrs(s), label.trim()));
   return html;
 }

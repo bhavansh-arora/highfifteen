@@ -27,8 +27,8 @@
             frag.appendChild(o); words.push(i);
           });
           node.replaceChild(frag, n);
-        } else if (n.nodeType === 1 && !n.classList.contains('sw')) {
-          if (n.tagName === 'BR') return;
+        } else if (n.nodeType === 1 && !(n.classList && n.classList.contains('sw'))) {
+          if (n.tagName === 'BR' || n.namespaceURI === 'http://www.w3.org/2000/svg') return;
           walk(n);
         }
       });
@@ -84,7 +84,7 @@
             var s = d.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); words.push(s);
           });
           node.replaceChild(frag, n);
-        } else if (n.nodeType === 1) walk(n);
+        } else if (n.nodeType === 1 && n.namespaceURI !== 'http://www.w3.org/2000/svg') walk(n);
       });
     })(el);
     g.fromTo(words, { opacity: .14 }, { opacity: 1, ease: 'none', stagger: .08, scrollTrigger: { trigger: el, start: 'top 82%', end: 'bottom 50%', scrub: .6 } });
@@ -156,7 +156,13 @@
 
   /* ---------- Feelings: pop in with a wobble ---------- */
   $$('[data-feel]').forEach(function (f) {
-    g.from($$('span', f), { scale: .4, opacity: 0, rotate: function (i) { return i % 2 ? 14 : -14; }, duration: 1, ease: 'back.out(2)', stagger: .1, scrollTrigger: { trigger: f, start: 'top 88%', once: true } });
+    var spans = $$('span', f);
+    var tilt = function (i, el) { return parseFloat(getComputedStyle(el).getPropertyValue('--r')) || 0; };
+    g.set(spans, { transition: 'none' });
+    g.fromTo(spans, { scale: .4, opacity: 0, rotate: function (i) { return i % 2 ? 14 : -14; } },
+      { scale: 1, opacity: 1, rotate: tilt, duration: 1, ease: 'back.out(2)', stagger: .1,
+        scrollTrigger: { trigger: f, start: 'top 88%', once: true },
+        onComplete: function () { g.set(spans, { clearProps: 'transition,transform,opacity' }); } });
   });
 
   /* ---------- Footer giant word ---------- */
