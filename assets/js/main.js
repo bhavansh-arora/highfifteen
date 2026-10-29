@@ -55,31 +55,32 @@
       store.set('hf-seen', '1');
       var counter = $('[data-count-target]'), obj = { v: 0 };
       var tl = g.timeline({ onComplete: finishIntro });
-      tl.to('.preloader__logo', { opacity: 1, y: 0, duration: .6, ease: 'power3.out' }, 0)
-        .to('.preloader__bar i', { scaleX: 1, duration: 1.5, ease: 'power2.inOut' }, 0.1)
-        .to(obj, { v: 15, duration: 1.5, ease: 'power2.inOut', onUpdate: function () { counter.textContent = String(Math.round(obj.v)).padStart(2, '0'); } }, 0.1)
-        .to('.preloader__inner', { y: -40, opacity: 0, duration: .5, ease: 'power3.in' }, '+=.15')
+      tl.to('.preloader__logo', { opacity: 1, y: 0, duration: .4, ease: 'power3.out' }, 0)
+        .to('.preloader__bar i', { scaleX: 1, duration: .9, ease: 'power2.inOut' }, 0.05)
+        .to(obj, { v: 15, duration: .9, ease: 'power2.inOut', onUpdate: function () { counter.textContent = String(Math.round(obj.v)).padStart(2, '0'); } }, 0.1)
+        .to('.preloader__inner', { y: -40, opacity: 0, duration: .35, ease: 'power3.in' }, '+=.05')
         .set('.preloader__panel', { yPercent: 100 })
-        .to('.preloader__panel', { yPercent: 0, duration: .55, ease: 'power3.inOut' }, '-=.15')
+        .to('.preloader__panel', { yPercent: 0, duration: .45, ease: 'power3.inOut' }, '-=.15')
         .set('.preloader', { display: 'none' })
-        .to('.preloader__panel', { yPercent: -100, duration: .7, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 200); } })
+        .to('.preloader__panel', { yPercent: -100, duration: .55, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 120); } })
         .set('.preloader__panel', { display: 'none' });
     } else if (h.classList.contains('is-entering') && g) {
       g.timeline({ onComplete: function () { g.set('.curtain', { clearProps: 'all' }); } })
         .to('.curtain__logo', { opacity: 0, duration: .25 }, .05)
-        .fromTo('.curtain', { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .85, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 280); } }, .1);
+        .fromTo('.curtain', { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .6, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 150); } }, .02);
     } else {
       store.set('hf-seen', '1');
       finishIntro();
     }
   }
-  if (d.readyState === 'complete') runIntro(); else w.addEventListener('load', runIntro);
-  setTimeout(finishIntro, 4200);
+  // Start as soon as the page is parsed: never wait for every image to download.
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', runIntro); else runIntro();
+  setTimeout(finishIntro, 2500);
 
   /* Curtain on internal navigation */
   d.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
-    if (!a || reduce || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    if (!a || reduce || !h.classList.contains('is-desktop') || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     if (a.target === '_blank' || a.hasAttribute('download')) return;
     var href = a.getAttribute('href');
     if (!href || href.charAt(0) === '#' || /^(mailto|tel|javascript):/i.test(href)) return;
@@ -97,7 +98,7 @@
     var cur = $('.curtain'); cur.classList.add('is-active');
     g.set(cur, { y: w.innerHeight * .14, yPercent: 100 });
     g.timeline()
-      .to(cur, { y: 0, yPercent: 0, duration: .7, ease: 'power3.inOut' })
+      .to(cur, { y: 0, yPercent: 0, duration: .5, ease: 'power3.inOut' })
       .to('.curtain__logo', { opacity: 1, duration: .25 }, '-=.2')
       .add(function () { location.href = url.href; });
   });

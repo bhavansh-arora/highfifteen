@@ -8,6 +8,7 @@
   var HF = w.HF = w.HF || {};
   if (!g || !ST || !h.classList.contains('motion-ok')) { h.classList.remove('motion-ok'); return; }
   g.registerPlugin(ST);
+  ST.config({ ignoreMobileResize: true });   // don't recalculate when the phone's address bar shows/hides
   g.defaults({ ease: 'power3.out' });
   var mm = g.matchMedia();
 
@@ -67,8 +68,8 @@
 
   /* ---------- Generic reveals ---------- */
   ST.batch('[data-reveal]', {
-    start: 'top 90%', once: true,
-    onEnter: function (els) { g.to(els, { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out', stagger: .09, overwrite: true }); }
+    start: 'top 96%', once: true,
+    onEnter: function (els) { g.to(els, { opacity: 1, y: 0, scale: 1, duration: .85, ease: 'expo.out', stagger: .06, overwrite: true }); }
   });
 
   /* ---------- Scroll-lit statement ---------- */
@@ -111,8 +112,10 @@
     tl.to(el, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.6, ease: 'expo.out' }, 0);
     if (img) tl.to(img, { scale: 1, duration: 1.8, ease: 'expo.out' }, 0);
   });
-  $$('.hero .atmos, .page-hero .atmos').forEach(function (a) {
-    g.to(a, { yPercent: 18, ease: 'none', scrollTrigger: { trigger: a.parentNode, start: 'top top', end: 'bottom top', scrub: true } });
+  mm.add('(min-width: 1024px)', function () {
+    $$('.hero .atmos, .page-hero .atmos').forEach(function (a) {
+      g.to(a, { yPercent: 18, ease: 'none', scrollTrigger: { trigger: a.parentNode, start: 'top top', end: 'bottom top', scrub: true } });
+    });
   });
   mm.add('(min-width: 1080px)', function () {
     $$('.hero__media, .page-hero__media').forEach(function (m) {
