@@ -1,0 +1,824 @@
+{
+"about-extra": {
+"w": [
+640,
+1280,
+1600
+],
+"ar": 1.1519
+},
+"audience-slide": {
+"w": [
+640,
+1170
+],
+"ar": 0.8136
+},
+"big-audience": {
+"w": [
+640,
+1086
+],
+"ar": 1.5
+},
+"cert-eqi": {
+"w": [
+600
+],
+"ar": 3.5474
+},
+"cert-strengthscope": {
+"w": [
+600
+],
+"ar": 5.0741
+},
+"collage": {
+"w": [
+640,
+1089
+],
+"ar": 1.0245
+},
+"conference-panel": {
+"w": [
+640,
+1200
+],
+"ar": 0.75
+},
+"conference-present": {
+"w": [
+640,
+749
+],
+"ar": 1.3304
+},
+"conference-tables": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.3333
+},
+"cs-gymshark": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.6679
+},
+"cs-kendo": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.25
+},
+"cs-levis": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.6679
+},
+"cs-mango": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.6667
+},
+"cs-mfk": {
+"w": [
+640,
+1280,
+1474
+],
+"ar": 0.6664
+},
+"cs-nike": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.7501
+},
+"cs-puig": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.8181
+},
+"cs-sony": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.4997
+},
+"culture-workshop": {
+"w": [
+640,
+1280
+],
+"ar": 1.5006
+},
+"fitness-event": {
+"w": [
+640,
+830
+],
+"ar": 0.8774
+},
+"gcuc-panel": {
+"w": [
+640,
+1067
+],
+"ar": 0.6669
+},
+"gcuc-table": {
+"w": [
+640,
+1280,
+1600
+],
+"ar": 1.4995
+},
+"headshot-1": {
+"w": [
+640,
+864
+],
+"ar": 0.8
+},
+"headshot-2": {
+"w": [
+640,
+864
+],
+"ar": 0.8
+},
+"headshot-3": {
+"w": [
+640,
+864
+],
+"ar": 0.8
+},
+"headshot-4": {
+"w": [
+640,
+864
+],
+"ar": 0.8
+},
+"high-fives": {
+"w": [
+640,
+1280,
+1440
+],
+"ar": 0.8862
+},
+"hr-chess": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.3333
+},
+"hr-conversation": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.4997
+},
+"hr-geometric": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.6667
+},
+"hr-laptop": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.0
+},
+"journal/j-2025": {
+"w": [
+480,
+960
+],
+"ar": 0.6667
+},
+"journal/j-agency": {
+"w": [
+480,
+960
+],
+"ar": 0.8
+},
+"journal/j-assuming": {
+"w": [
+480,
+960
+],
+"ar": 0.6676
+},
+"journal/j-bouncing": {
+"w": [
+480,
+960
+],
+"ar": 0.6667
+},
+"journal/j-career": {
+"w": [
+480,
+960
+],
+"ar": 1.3333
+},
+"journal/j-composure": {
+"w": [
+480,
+960
+],
+"ar": 0.6667
+},
+"journal/j-conscious": {
+"w": [
+480,
+960
+],
+"ar": 0.7501
+},
+"journal/j-delegating": {
+"w": [
+480,
+960
+],
+"ar": 0.6667
+},
+"journal/j-future": {
+"w": [
+480,
+960
+],
+"ar": 0.6667
+},
+"journal/j-habits": {
+"w": [
+480,
+960
+],
+"ar": 1.3966
+},
+"journal/j-humility": {
+"w": [
+480,
+960
+],
+"ar": 0.6649
+},
+"journal/j-management": {
+"w": [
+480,
+960
+],
+"ar": 1.4997
+},
+"journal/j-mistake": {
+"w": [
+480,
+960
+],
+"ar": 1.4997
+},
+"journal/j-pause": {
+"w": [
+480,
+960
+],
+"ar": 0.8
+},
+"journal/j-race": {
+"w": [
+480,
+960
+],
+"ar": 1.4997
+},
+"journal/j-reputation": {
+"w": [
+480,
+960
+],
+"ar": 0.6213
+},
+"journal/j-resonates": {
+"w": [
+383
+],
+"ar": 0.8254
+},
+"journal/j-survival": {
+"w": [
+385
+],
+"ar": 0.8174
+},
+"journal/j-thriving": {
+"w": [
+480,
+960
+],
+"ar": 0.6668
+},
+"journal/j-yourself": {
+"w": [
+480,
+960
+],
+"ar": 0.7501
+},
+"lift-2025": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.4997
+},
+"logo": {
+"w": [
+1052
+],
+"ar": 1.705
+},
+"microphone": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.4997
+},
+"outdoor-field": {
+"w": [
+640,
+1280,
+1600
+],
+"ar": 1.4995
+},
+"panel-stage": {
+"w": [
+640,
+1172
+],
+"ar": 1.7466
+},
+"panel-talk": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.7703
+},
+"podcast": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.8624
+},
+"podium": {
+"w": [
+640,
+665
+],
+"ar": 1.2913
+},
+"seminar": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.4997
+},
+"small-group": {
+"w": [
+640,
+1049
+],
+"ar": 1.2731
+},
+"speaking-engagement": {
+"w": [
+640,
+1280
+],
+"ar": 1.5202
+},
+"stage-glasses": {
+"w": [
+640,
+1280,
+1290
+],
+"ar": 1.3057
+},
+"stage-high-five": {
+"w": [
+640,
+1007
+],
+"ar": 1.009
+},
+"stage-presentation": {
+"w": [
+640,
+882
+],
+"ar": 1.3343
+},
+"unfiltering-art": {
+"w": [
+640,
+1280,
+1836
+],
+"ar": 2.366
+},
+"vanessa-deconstruct": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.5015
+},
+"vanessa-leadership-stage": {
+"w": [
+640,
+1280,
+1288
+],
+"ar": 0.805
+},
+"vanessa-portrait": {
+"w": [
+640,
+1246
+],
+"ar": 0.8091
+},
+"vanessa-vibes": {
+"w": [
+640,
+797
+],
+"ar": 0.9696
+},
+"womens-leadership-stage": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 1.5006
+},
+"workshop-forms": {
+"w": [
+640,
+1258
+],
+"ar": 1.4493
+},
+"workshop-outdoors": {
+"w": [
+640,
+1280,
+1920
+],
+"ar": 0.7703
+},
+"logos/bt-logo": {
+"w": [
+106
+],
+"ar": 1.0
+},
+"logos/cbre-logo-smaller": {
+"w": [
+308
+],
+"ar": 3.8025
+},
+"logos/dior-logo-transparent": {
+"w": [
+406
+],
+"ar": 3.5304
+},
+"logos/drapers-logo": {
+"w": [
+248
+],
+"ar": 3.3514
+},
+"logos/foundandflourish-logo": {
+"w": [
+150
+],
+"ar": 2.0833
+},
+"logos/givenchy-logo": {
+"w": [
+801
+],
+"ar": 10.4026
+},
+"logos/greatist-logo": {
+"w": [
+221
+],
+"ar": 3.6833
+},
+"logos/gymshark-final-logo": {
+"w": [
+585
+],
+"ar": 6.9643
+},
+"logos/gymshark-logo": {
+"w": [
+498
+],
+"ar": 5.7907
+},
+"logos/jll-logo": {
+"w": [
+211
+],
+"ar": 2.2447
+},
+"logos/levi-strauss-and-co-logo": {
+"w": [
+1214
+],
+"ar": 13.4889
+},
+"logos/levis-logo-transparent": {
+"w": [
+263
+],
+"ar": 2.4352
+},
+"logos/lvmh-perfumes-and-cosmetics-logo": {
+"w": [
+356
+],
+"ar": 3.6327
+},
+"logos/nestle-text-only": {
+"w": [
+245
+],
+"ar": 3.6567
+},
+"logos/nike-logo": {
+"w": [
+234
+],
+"ar": 2.8537
+},
+"logos/refinery29-logo": {
+"w": [
+289
+],
+"ar": 5.0702
+},
+"logos/refuge-logo": {
+"w": [
+166
+],
+"ar": 1.5091
+},
+"logos/sony-music-logo": {
+"w": [
+695
+],
+"ar": 7.5543
+},
+"logos/walt-disney-logo-transparent": {
+"w": [
+694
+],
+"ar": 6.5472
+},
+"logos/wwd-logo": {
+"w": [
+203
+],
+"ar": 3.3833
+},
+"logos/adanola": {
+"w": [
+420
+],
+"ar": 7.1186
+},
+"logos/adidas": {
+"w": [
+420
+],
+"ar": 4.3299
+},
+"logos/allbright": {
+"w": [
+420
+],
+"ar": 8.75
+},
+"logos/alzheimers-society": {
+"w": [
+420
+],
+"ar": 2.5301
+},
+"logos/better-nature": {
+"w": [
+380
+],
+"ar": 1.5574
+},
+"logos/british-fashion-council": {
+"w": [
+317
+],
+"ar": 1.7611
+},
+"logos/cancer-research": {
+"w": [
+408
+],
+"ar": 2.4727
+},
+"logos/chillys": {
+"w": [
+414
+],
+"ar": 5.3077
+},
+"logos/comic-relief": {
+"w": [
+406
+],
+"ar": 1.8972
+},
+"logos/dover-street-market": {
+"w": [
+156
+],
+"ar": 0.8125
+},
+"logos/exec-foundation": {
+"w": [
+395
+],
+"ar": 2.5
+},
+"logos/fenty": {
+"w": [
+420
+],
+"ar": 5.9155
+},
+"logos/gcuc": {
+"w": [
+335
+],
+"ar": 1.8011
+},
+"logos/loewe": {
+"w": [
+420
+],
+"ar": 4.375
+},
+"logos/louis-vuitton": {
+"w": [
+420
+],
+"ar": 9.7674
+},
+"logos/maison-francis-kurkdjian": {
+"w": [
+420
+],
+"ar": 2.8571
+},
+"logos/mango": {
+"w": [
+420
+],
+"ar": 5.9155
+},
+"logos/moet-hennessy": {
+"w": [
+420
+],
+"ar": 6.6667
+},
+"logos/pha-group": {
+"w": [
+420
+],
+"ar": 2.7273
+},
+"logos/porter-novelli": {
+"w": [
+408
+],
+"ar": 2.8333
+},
+"logos/puig": {
+"w": [
+420
+],
+"ar": 5.7534
+},
+"logos/ralph-lauren": {
+"w": [
+420
+],
+"ar": 3.6522
+},
+"logos/samsung": {
+"w": [
+420
+],
+"ar": 6.4615
+},
+"logos/stella-mccartney": {
+"w": [
+420
+],
+"ar": 17.5
+},
+"logos/tala": {
+"w": [
+420
+],
+"ar": 4.1584
+},
+"logos/thortful": {
+"w": [
+420
+],
+"ar": 3.6207
+},
+"logos/wwf": {
+"w": [
+146
+],
+"ar": 0.6791
+},
+"logos/your-place": {
+"w": [
+420
+],
+"ar": 4.6154
+},
+"tedx": {
+"w": [
+640,
+1280
+],
+"ar": 1.7778
+}
+}

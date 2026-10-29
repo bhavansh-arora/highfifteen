@@ -1,0 +1,96 @@
+<div class="quiz grain" data-quiz data-header="dark">
+  <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span></div>
+  <div class="quiz__inner">
+    <div class="quiz__intro">
+      <div>
+        <p class="eyebrow">The Pressure Check · 2 minutes</p>
+        <h2 class="h-m" data-split>How is your team <span class="it">really</span> doing?</h2>
+      </div>
+      <div class="stack">
+        <p class="muted measure-s">Six honest questions built on the patterns Vanessa sees in leaders every week. You get a score, a plain-English read on what is going on, and where we would start.</p>
+        <ul class="dots small muted">
+          <li>No email needed to see your result</li>
+          <li>Your answers stay in your browser</li>
+          <li>Optional: send it to Vanessa to shape your first conversation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quiz__body">
+      <div class="quiz__progress"><span data-quiz-step>01 / 06</span><span class="bar"><i></i></span></div>
+
+      <div class="quiz__q is-active" data-area="Decisions">
+        <h3>How do important decisions get made on your team right now?</h3>
+        <div class="quiz__opts">
+          <button type="button" class="quiz__opt" data-v="0"><i>A</i>Clearly and quickly</button>
+          <button type="button" class="quiz__opt" data-v="1"><i>B</i>Mostly fine, with some delays</button>
+          <button type="button" class="quiz__opt" data-v="2"><i>C</i>Slowly, with lots of escalation</button>
+          <button type="button" class="quiz__opt" data-v="3"><i>D</i>They stall, or get re-made later</button>
+        </div>
+      </div>
+      <div class="quiz__q" data-area="Energy">
+        <h3>Thriving, surviving or suffering: how would most of your people describe their week?</h3>
+        <div class="quiz__opts">
+          <button type="button" class="quiz__opt" data-v="0"><i>A</i>Thriving</button>
+          <button type="button" class="quiz__opt" data-v="1"><i>B</i>Mostly thriving, some tired faces</button>
+          <button type="button" class="quiz__opt" data-v="2"><i>C</i>Surviving</button>
+          <button type="button" class="quiz__opt" data-v="3"><i>D</i>Suffering, if they were honest</button>
+        </div>
+      </div>
+      <div class="quiz__q" data-area="Conversations">
+        <h3>When something is going wrong, how early does someone say so?</h3>
+        <div class="quiz__opts">
+          <button type="button" class="quiz__opt" data-v="0"><i>A</i>Straight away</button>
+          <button type="button" class="quiz__opt" data-v="1"><i>B</i>Within a few days</button>
+          <button type="button" class="quiz__opt" data-v="2"><i>C</i>Only once it is costly</button>
+          <button type="button" class="quiz__opt" data-v="3"><i>D</i>Rarely. It goes underground</button>
+        </div>
+      </div>
+      <div class="quiz__q" data-area="Inclusion">
+        <h3>How confident are you that everyone can bring their full voice to work?</h3>
+        <div class="quiz__opts">
+          <button type="button" class="quiz__opt" data-v="0"><i>A</i>Very confident</button>
+          <button type="button" class="quiz__opt" data-v="1"><i>B</i>Fairly confident</button>
+          <button type="button" class="quiz__opt" data-v="2"><i>C</i>Not very. Some voices dominate</button>
+          <button type="button" class="quiz__opt" data-v="3"><i>D</i>Not at all</button>
+        </div>
+      </div>
+      <div class="quiz__q" data-area="Leadership capacity">
+        <h3>How stretched are your senior leaders?</h3>
+        <div class="quiz__opts">
+          <button type="button" class="quiz__opt" data-v="0"><i>A</i>Energised and focused</button>
+          <button type="button" class="quiz__opt" data-v="1"><i>B</i>Busy, but coping well</button>
+          <button type="button" class="quiz__opt" data-v="2"><i>C</i>Stretched thin</button>
+          <button type="button" class="quiz__opt" data-v="3"><i>D</i>Running on empty</button>
+        </div>
+      </div>
+      <div class="quiz__q" data-area="Values in action">
+        <h3>Do your stated values match what people actually experience?</h3>
+        <div class="quiz__opts">
+          <button type="button" class="quiz__opt" data-v="0"><i>A</i>Completely</button>
+          <button type="button" class="quiz__opt" data-v="1"><i>B</i>Mostly</button>
+          <button type="button" class="quiz__opt" data-v="2"><i>C</i>Patchy, depends on the manager</button>
+          <button type="button" class="quiz__opt" data-v="3"><i>D</i>Not really</button>
+        </div>
+      </div>
+
+      <div class="quiz__result" data-quiz-result aria-live="polite">
+        <div class="gauge">
+          <div class="gauge__ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52"/></svg><div class="gauge__val" data-gauge-val>0</div></div>
+          <div><div class="gauge__band" data-band></div><h3 class="h-s mt-s" data-headline></h3></div>
+        </div>
+        <p class="muted mb-0" data-diagnosis></p>
+        <div class="quiz__rec"><strong>Biggest pressure point</strong><span data-hotspot></span></div>
+        <div class="quiz__rec"><strong>Where we would start</strong><span data-rec></span></div>
+        <div class="btn-row btn-row--stack">
+          <a class="btn btn--mint" href="contact.html" data-result-cta data-magnetic><span>Send my result to Vanessa</span><span class="btn__ic">{{i:arrow}}</span></a>
+          <button class="quiz__back" type="button" data-quiz-restart>Retake the check</button>
+        </div>
+      </div>
+
+      <div class="quiz__nav" data-quiz-nav>
+        <button class="quiz__back" type="button" data-quiz-back disabled>{{i:arrow-left}} Back</button>
+        <span class="small muted">Pick the answer closest to today.</span>
+      </div>
+    </div>
+  </div>
+</div>
