@@ -134,6 +134,7 @@
     var rail = $('[data-rail]'); if (!rail) return;
     var track = $('[data-rail-track]', rail), sec = rail.closest('section');
     rail.classList.add('is-pinned');
+    sec.classList.add('has-pin');   // section becomes exactly one screen tall, so nothing is cut off while pinned
     var dist = function () { return Math.max(0, track.scrollWidth - w.innerWidth + 16); };
     var tween = g.to(track, { x: function () { return -dist(); }, ease: 'none',
       scrollTrigger: { trigger: sec, start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: .8, invalidateOnRefresh: true, anticipatePin: 1 } });
@@ -142,7 +143,7 @@
       var target = st.start + (st.end - st.start) * Math.min(1, Math.max(0, st.progress + dir * card / dist()));
       if (HF.lenis) HF.lenis.scrollTo(target, { duration: 1 }); else w.scrollTo({ top: target, behavior: 'smooth' });
     };
-    return function () { rail.classList.remove('is-pinned'); HF.railStep = null; };
+    return function () { rail.classList.remove('is-pinned'); sec.classList.remove('has-pin'); HF.railStep = null; };
   });
 
   /* ---------- Timeline & steps ---------- */
@@ -166,8 +167,21 @@
   });
 
   /* ---------- Footer giant word ---------- */
-  var mega = $('.footer-mega');
-  if (mega) g.fromTo(mega, { yPercent: 40, opacity: .2 }, { yPercent: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: mega, start: 'top bottom', end: 'bottom bottom', scrub: true } });
+  /* ---------- Footer wordmark: letters rise, fill with colour, jump on hover ---------- */
+  var mega = $('[data-mega]');
+  if (mega) {
+    var palette = ['var(--mint)', 'var(--sun)', 'var(--coral)', 'var(--orchid)', 'var(--tangerine)', 'var(--indigo-2)'];
+    var n = 0;
+    mega.innerHTML = mega.textContent.split('').map(function (ch) {
+      if (ch === ' ') return '<span class="sp"></span>';
+      var k = n++;
+      return '<span class="ml" style="--c:' + palette[k % palette.length] + ';--i:' + k + ';--rt:' + (k % 2 ? 6 : -6) + 'deg">' + ch + '</span>';
+    }).join('');
+    var letters = $$('.ml', mega);
+    g.fromTo(letters, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.1, ease: 'expo.out', stagger: .05,
+      scrollTrigger: { trigger: mega, start: 'top 95%', once: true, onEnter: function () { setTimeout(function () { mega.classList.add('is-lit'); }, 350); } },
+      onComplete: function () { g.set(letters, { clearProps: 'transform' }); } });
+  }
 
   /* ---------- Testimonial word cascade ---------- */
   HF.animateQuote = function (fig) {
