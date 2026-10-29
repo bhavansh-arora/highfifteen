@@ -602,6 +602,24 @@
     });
   })();
 
+  /* ---------- Article pages: reading progress + copy link ---------- */
+  var prog = $('[data-read-progress]'), artBody = $('.article-body');
+  if (prog && artBody) {
+    var upd = function () {
+      var r = artBody.getBoundingClientRect(), total = r.height - w.innerHeight * .6;
+      var p = Math.min(1, Math.max(0, (-r.top + w.innerHeight * .3) / Math.max(1, total)));
+      prog.style.transform = 'scaleX(' + p + ')';
+    };
+    w.addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true }); upd();
+  }
+  $$('[data-copy-url]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var done = $('[data-copy-done]');
+      var ok = function () { if (done) { done.textContent = 'Link copied'; setTimeout(function () { done.textContent = ''; }, 1800); } };
+      if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(ok, function () {});
+    });
+  });
+
   /* ---------- Misc ---------- */
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();

@@ -19,7 +19,9 @@ Fonts and images are self-hosted (UK/EU GDPR friendly); YouTube only loads when 
 | Speaking | `speaking.html` | TEDx, speaking topics, gallery, process, FAQ |
 | HR Hub | `hr-hub.html` | Six support areas, **cost-of-turnover calculator**, insights |
 | Case studies | `case-studies.html` | Sony Music, Levi's, Gymshark, beauty & luxury group, more partnerships |
-| Journal | `journal.html` | 20 articles with category filters |
+| Journal | `journal.html` | All articles with category filters |
+| Articles (20) | `journal-*.html` | Full article pages: reading progress, share links, author box, related reads |
+| Case studies (4) | `case-study-*.html` | Sony Music, Levi's, Gymshark, beauty & luxury group: brief, what we did, impact, quotes |
 | Press & media | `press.html` | Podcasts, publications, copyable bio, downloadable headshots |
 | Work with us | `contact.html` | **4-step qualifying enquiry form** |
 | 404 | `404.html` | Not-found page |
@@ -56,6 +58,13 @@ node build.js
 
 This writes the finished pages to the repo root and refreshes `sitemap.xml`. Node 18+ is the only requirement.
 
+**Add a journal article:** add an entry to `_src/data/journal.json` (slug, title, date, category,
+image, excerpt, minutes, html) and run `node build.js`. The article page, the journal grid, related
+reads and the sitemap all update automatically.
+
+**Add a case study:** add an entry to `_src/data/cases.json` and rebuild. Pages are generated from
+`_src/partials/case.html`.
+
 Helpers you can use inside `_src` files:
 
 - `<x-img name="headshot-1" alt="…" sizes="50vw">` — responsive WebP image (see `_src/images.json`)
@@ -75,6 +84,5 @@ It is a static site: upload the repo root to Netlify, Vercel, Cloudflare Pages o
 - Type: Bricolage Grotesque (display, optical sizing), Instrument Serif italic accents, Plus Jakarta Sans (body), JetBrains Mono (labels), all self-hosted.
 - Accessibility: skip link, keyboard-friendly tabs and accordions, visible focus states, alt text.
 - SEO: unique titles and descriptions, Open Graph images, canonical URLs, JSON-LD, sitemap and robots.txt.
-- Journal cards link to the existing articles on highfifteen.com until they are migrated.
 
 Designed and built by Code Bunny.

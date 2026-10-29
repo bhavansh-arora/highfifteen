@@ -139,6 +139,36 @@ function render(html, vars = {}, depth = 0) {
   return html;
 }
 
+// ---------- journal data ----------
+const journal = fs.existsSync(path.join(SRC, 'data/journal.json')) ? JSON.parse(read('data/journal.json')) : [];
+const CATS = { leadership: 'Leadership', culture: 'Culture &amp; inclusion', resilience: 'Resilience', career: 'Career' };
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const dateLabel = (iso) => { const [y, m, d] = iso.split('-'); return `${+d} ${MONTHS[+m - 1]} ${y}`; };
+const postUrl = (a) => `journal-${a.slug}.html`;
+function postCard(a, opts = {}) {
+  const sizes = opts.featured ? '(min-width: 1000px) 55vw, 92vw' : '(min-width: 1080px) 30vw, (min-width: 720px) 45vw, 92vw';
+  const meta = `<div class="post__meta"><span class="cat">${CATS[a.cat]}</span><span>${dateLabel(a.date)}</span><span>${a.minutes} min read</span></div>`;
+  const body = opts.featured
+    ? `<div>${meta}<h3 class="mt-s">${a.title}</h3><p class="mt-s">${a.excerpt}</p><span class="link-arrow mt-m" style="display:inline-flex">Read the article {{i:arrow}}</span></div>`
+    : `${meta}<h3>${a.title}</h3><p>${a.excerpt}</p>`;
+  return `<a class="post${opts.featured ? ' post--featured' : ''}" href="${postUrl(a)}" data-cat="${a.cat}" data-cursor="Read"${opts.reveal ? ' data-reveal' : ''}><div class="post__img"><x-img name="journal/${a.img}" alt="" sizes="${sizes}"></div>${body}</a>`;
+}
+function related(slug, n = 3) {
+  const me = journal.find((a) => a.slug === slug);
+  const same = journal.filter((a) => a.slug !== slug && me && a.cat === me.cat);
+  const rest = journal.filter((a) => a.slug !== slug && !same.includes(a));
+  return same.concat(rest).slice(0, n);
+}
+function journalTags(html) {
+  html = html.replace(/<x-journal-grid\s*\/?>/g, () => journal.map((a, k) => postCard(a, { featured: k === 0 })).join('\n'));
+  html = html.replace(/<x-journal-latest\s*([^>]*?)\/?>/g, (_, s) => {
+    const a = attrs(s); const pick = a.slugs ? a.slugs.split(',').map((x) => journal.find((j) => j.slug === x.trim())).filter(Boolean) : journal.slice(0, +(a.n || 3));
+    return pick.map((p) => postCard(p, { reveal: true })).join('\n');
+  });
+  html = html.replace(/<x-journal-related\s+slug="([^"]+)"\s*\/?>/g, (_, slug) => related(slug).map((p) => postCard(p, { reveal: true })).join('\n'));
+  return html;
+}
+
 // ---------- build ----------
 const pagesDir = path.join(SRC, 'pages');
 const pages = fs.readdirSync(pagesDir).filter((f) => f.endsWith('.html')).sort();
@@ -147,21 +177,16 @@ const header = read('partials/header.html');
 const footer = read('partials/footer.html');
 const sitemap = [];
 
-for (const file of pages) {
-  const raw = fs.readFileSync(path.join(pagesDir, file), 'utf8');
-  const mm = raw.match(/^<!--meta\s+([\s\S]*?)-->\s*/);
-  if (!mm) throw new Error('Missing meta in ' + file);
-  const meta = JSON.parse(mm[1]);
-  const body = raw.slice(mm[0].length);
+function writePage(file, meta, body) {
   const slug = file === 'index.html' ? '' : file;
   const vars = {
     title: meta.title,
     description: meta.description,
     canonical: `${SITE_URL}/${slug}`,
-    ogimage: `${SITE_URL}/assets/img/${meta.og || 'og-default'}.jpg`,
+    ogimage: meta.ogimage || `${SITE_URL}/assets/img/${meta.og || 'og-default'}.jpg`,
     bodyclass: meta.bodyclass || '',
     accent: meta.accent || 'acc-mint',
-    schema: meta.schema ? read(`partials/${meta.schema}.html`) : '',
+    schema: meta.schemaHtml || (meta.schema ? read(`partials/${meta.schema}.html`) : ''),
     robots: meta.noindex ? 'noindex, follow' : 'index, follow',
   };
   let hdr = header;
@@ -169,12 +194,55 @@ for (const file of pages) {
   hdr = hdr.replace(/\{\{cur:(\w[\w-]*)\}\}/g, (_, k) => (k === nav ? ' aria-current="page"' : ''));
   const svcPages = ['services', 'culture', 'coaching', 'learning', 'speaking', 'hr-hub'];
   hdr = hdr.replace('{{svc-current}}', svcPages.includes(nav) ? ' is-current' : '');
-  const out = render(head, vars) + render(hdr, vars) + render(body, vars) + render(footer, vars);
+  const out = render(head, vars) + render(hdr, vars) + render(journalTags(body), vars) + render(footer, vars);
   const leftover = out.match(/\{\{[^}]+\}\}|<x-[a-z]+/);
   if (leftover) throw new Error(`Unrendered token in ${file}: ${leftover[0]}`);
   fs.writeFileSync(path.join(ROOT, file), out);
-  if (!meta.noindex) sitemap.push(`  <url><loc>${SITE_URL}/${slug}</loc><changefreq>monthly</changefreq><priority>${slug ? '0.8' : '1.0'}</priority></url>`);
+  if (!meta.noindex) sitemap.push(`  <url><loc>${SITE_URL}/${slug}</loc><changefreq>monthly</changefreq><priority>${slug ? (meta.priority || '0.8') : '1.0'}</priority></url>`);
   console.log('built', file);
 }
+
+for (const file of pages) {
+  const raw = fs.readFileSync(path.join(pagesDir, file), 'utf8');
+  const mm = raw.match(/^<!--meta\s+([\s\S]*?)-->\s*/);
+  if (!mm) throw new Error('Missing meta in ' + file);
+  writePage(file, JSON.parse(mm[1]), raw.slice(mm[0].length));
+}
+
+// One page per journal article, from _src/data/journal.json + _src/partials/article.html
+const articleTpl = journal.length ? read('partials/article.html') : '';
+for (const a of journal) {
+  const fill = { slug: a.slug, 'a-title': a.title, 'a-cat': CATS[a.cat], 'a-catkey': a.cat, 'a-date': dateLabel(a.date), 'a-iso': a.date,
+    'a-min': String(a.minutes), 'a-img': a.img, 'a-body': a.html, 'a-url': encodeURIComponent(`${SITE_URL}/${postUrl(a)}`),
+    'a-series': a.series ? `<span class="chip">Series · ${a.series.replace(/ series$/i, '')}</span>` : '' };
+  const body = articleTpl.replace(/\{\{(slug|a-[\w-]+)\}\}/g, (_, k) => fill[k]);
+  const imgW = (images['journal/' + a.img] || { w: [960] }).w.slice(-1)[0];
+  const schemaHtml = `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: a.title.replace(/&amp;/g, '&'), description: a.excerpt, datePublished: a.date, image: `${SITE_URL}/assets/img/journal/${a.img}-${imgW}.webp`, author: { '@type': 'Person', name: 'Vanessa Belleau', url: `${SITE_URL}/about.html` }, publisher: { '@type': 'Organization', name: 'High Fifteen Ltd', logo: `${SITE_URL}/assets/img/logo.png` }, mainEntityOfPage: `${SITE_URL}/${postUrl(a)}` })}</script>`;
+  writePage(postUrl(a), { title: `${a.title.replace(/&amp;/g, '&')} | High Fifteen Journal`, description: a.excerpt, nav: 'journal', accent: 'acc-indigo', bodyclass: 'page-article', ogimage: `${SITE_URL}/assets/img/journal/${a.img}-${imgW}.webp`, schemaHtml, priority: '0.6' }, body);
+}
+
+// One page per case study, from _src/data/cases.json + _src/partials/case.html
+const cases = fs.existsSync(path.join(SRC, 'data/cases.json')) ? JSON.parse(read('data/cases.json')) : [];
+const caseTpl = cases.length ? read('partials/case.html') : '';
+const caseUrl = (c) => `case-study-${c.slug}.html`;
+cases.forEach((c, k) => {
+  const next = cases[(k + 1) % cases.length];
+  const statCls = ['stat--mint', '', 'stat--sun'];
+  const quotes = c.quotes.length ? `<section class="section t-paper"><div class="container"><div class="section-head"><div><p class="eyebrow" data-reveal>In their words</p><h2 class="h-m" data-split>What the client [[@said.]]</h2></div></div><div class="case-quotes">${c.quotes.map(([q, who], i) => `<figure class="t-card${i === 0 ? ' t-card--feature' : ''}" data-reveal><blockquote>“${q}”</blockquote><figcaption><span class="quote__avatar">${c.client.replace(/[^A-Z]/g, '').slice(0, 2) || 'HF'}</span><div><strong>${who}</strong></div></figcaption></figure>`).join('')}</div></div></section>` : '';
+  const fill = {
+    'c-client': c.client, 'c-tag': c.tag, 'c-title': c.title, 'c-summary': c.summary, 'c-img': c.img, 'c-imgalt': c.imgAlt, 'c-accent': c.accent,
+    'c-logo': c.logo ? `<x-img name="${c.logo}" alt="${c.client} logo" class="case-hero__logo">` : '',
+    'c-metrics': c.metrics.map(([v, l]) => `<div class="fact"><span class="mono">${l}</span><strong class="fact__big">${v}</strong></div>`).join(''),
+    'c-stats': c.metrics.map(([v, l], i) => `<article class="stat ${statCls[i] || ''}" data-reveal><div class="stat__num" style="font-size:clamp(3rem,5.4vw,5.4rem)">${v}</div><p>${l}</p></article>`).join(''),
+    'c-brief': c.brief, 'c-impact': c.impact, 'c-did-n': String(Math.min(4, c.did.length)),
+    'c-did': c.did.map(([t, d]) => `<div class="step" data-reveal><h3>${t}</h3><p>${d}</p></div>`).join(''),
+    'c-quotes': quotes,
+    'c-services': c.services.map(([href, label]) => `<a class="chip" href="${href}">${label.replace(/&(?!amp;)/g, '&amp;')} {{i:arrow}}</a>`).join(''),
+    'c-next-url': caseUrl(next), 'c-next-client': next.client, 'c-next-tag': next.tag,
+  };
+  const body = caseTpl.replace(/\{\{(c-[\w-]+)\}\}/g, (_, key) => { if (fill[key] === undefined) throw new Error('case field ' + key); return fill[key]; });
+  writePage(caseUrl(c), { title: `${c.client.replace(/&amp;/g, '&')} case study: ${c.tag} | High Fifteen`, description: c.summary, nav: 'cases', accent: c.accent, ogimage: `${SITE_URL}/assets/img/${c.img}-${images[c.img].w.slice(-1)[0]}.webp`, priority: '0.7' }, body);
+});
+
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemap.join('\n')}\n</urlset>\n`);
 console.log('built sitemap.xml');

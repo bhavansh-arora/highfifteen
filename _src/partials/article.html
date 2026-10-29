@@ -1,0 +1,67 @@
+<div class="read-progress" aria-hidden="true"><i data-read-progress></i></div>
+<main id="main">
+  <article class="article">
+    <header class="page-hero article-hero t-ink grain" data-header="dark">
+      <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span><span class="orb"></span></div>
+      <div class="container-narrow">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="journal.html">Journal</a><span aria-hidden="true">/</span><span aria-current="page">{{a-cat}}</span></nav>
+        <div class="article-hero__meta" data-hero-fade><span class="chip chip--mint">{{a-cat}}</span><span class="mono">{{a-date}} · {{a-min}} min read</span>{{a-series}}</div>
+        <h1 class="h-l article-hero__title" data-split>{{a-title}}</h1>
+        <div class="byline" data-hero-fade>
+          <x-img name="headshot-2" alt="" sizes="56px" class="byline__img">
+          <div><strong>Vanessa Belleau</strong><span>Founder, executive coach &amp; speaker</span></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="article-cover-wrap t-paper">
+      <div class="container article-cover" data-reveal="fade">
+        <div class="media-card"><x-img name="journal/{{a-img}}" alt="" sizes="(min-width: 1100px) 1100px, 100vw" eager></div>
+      </div>
+    </div>
+
+    <div class="t-paper">
+      <div class="container article-layout">
+        <aside class="article-share" aria-label="Share this article">
+          <span class="mono">Share</span>
+          <a class="round-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{a-url}}" target="_blank" rel="noopener" aria-label="Share on LinkedIn">{{i:linkedin}}</a>
+          <button class="round-btn" type="button" data-copy-url aria-label="Copy link to this article">{{i:copy}}</button>
+          <span class="article-share__done" data-copy-done aria-live="polite"></span>
+        </aside>
+        <div class="article-body">
+{{a-body}}
+        </div>
+      </div>
+
+      <div class="container-narrow article-end">
+        <div class="author-box" data-reveal>
+          <x-img name="headshot-4" alt="Vanessa Belleau" sizes="120px" class="author-box__img">
+          <div>
+            <p class="mono mb-s" style="opacity:.6">Written by</p>
+            <p class="h-s mb-s">Vanessa Belleau</p>
+            <p class="muted">Founder of High Fifteen, executive coach, culture consultant and TEDx speaker. 18+ years helping leaders perform under pressure without losing the people.</p>
+            <div class="btn-row mt-m"><x-btn href="contact.html" variant="primary" size="sm">Work with Vanessa</x-btn><x-btn href="about.html" variant="ghost" size="sm">About Vanessa</x-btn></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="section t-paper">
+    <div class="container">
+      <div class="kicker-row">
+        <div><p class="eyebrow" data-reveal>Keep reading</p><h2 class="h-m" data-split>More from the [[~Journal.]]</h2></div>
+        <a class="link-arrow" href="journal.html" data-reveal>All articles {{i:arrow}}</a>
+      </div>
+      <div class="posts">
+        <x-journal-related slug="{{slug}}" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--flush-top t-paper">
+    <div class="container">
+      <x-include file="newsletter" />
+    </div>
+  </section>
+</main>

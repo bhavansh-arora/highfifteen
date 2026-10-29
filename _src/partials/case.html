@@ -1,0 +1,67 @@
+<main id="main">
+  <section class="page-hero t-ink grain" data-header="dark">
+    <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span><span class="orb"></span></div>
+    <div class="grid-lines" aria-hidden="true"></div>
+    <div class="container">
+      <div class="page-hero__grid page-hero__grid--media">
+        <div>
+          <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="case-studies.html">Case studies</a><span aria-hidden="true">/</span><span aria-current="page">{{c-client}}</span></nav>
+          {{c-logo}}
+          <p class="eyebrow" data-hero-fade>{{c-tag}}</p>
+          <h1 class="h-l" data-split>{{c-title}}</h1>
+          <p class="lead" data-hero-fade>{{c-summary}}</p>
+        </div>
+        <div class="page-hero__media" data-hero-media>
+          <div class="media-card"><x-img name="{{c-img}}" alt="{{c-imgalt}}" sizes="(min-width: 1080px) 34vw, 86vw" eager></div>
+        </div>
+      </div>
+      <div class="page-hero__facts" data-hero-fade>{{c-metrics}}</div>
+    </div>
+  </section>
+
+  <section class="section t-paper">
+    <div class="container">
+      <div class="split split--top">
+        <div><p class="eyebrow" data-reveal>The brief</p><h2 class="h-m" data-split>What was at [[~stake.]]</h2></div>
+        <div class="prose lead muted" data-reveal>{{c-brief}}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section t-paper-2 inset">
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow" data-reveal>What we did</p><h2 class="h-m" data-split>How we [[@got there.]]</h2></div></div>
+      <div class="steps steps--{{c-did-n}}">{{c-did}}</div>
+    </div>
+  </section>
+
+  <section class="section t-ink grain" data-header="dark">
+    <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span></div>
+    <div class="container z2">
+      <div class="split split--top">
+        <div><p class="eyebrow" data-reveal>The impact</p><h2 class="h-m" data-split>What [[~changed.]]</h2></div>
+        <div class="prose lead muted" data-reveal>{{c-impact}}</div>
+      </div>
+      <div class="stats mt-l">{{c-stats}}</div>
+    </div>
+  </section>
+
+  {{c-quotes}}
+
+  <section class="section t-paper">
+    <div class="container">
+      <div class="split" style="align-items:end">
+        <div>
+          <p class="eyebrow" data-reveal>Services involved</p>
+          <div class="chips mt-s" data-reveal>{{c-services}}</div>
+        </div>
+        <a class="next-case" href="{{c-next-url}}" data-reveal data-cursor="Next">
+          <span class="mono">Next story · {{c-next-tag}}</span>
+          <span class="next-case__t">{{c-next-client}} {{i:arrow}}</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <x-include file="cta" acc="{{c-accent}}" eyebrow="Could this be your story?" heading="Let’s talk about what’s at [[stake]] for you." text="Tell us what’s going on. We’ll tell you honestly whether we can help, and how." href="contact.html" label="Start the conversation" />
+</main>
