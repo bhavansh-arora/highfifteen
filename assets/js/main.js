@@ -602,6 +602,47 @@
     });
   })();
 
+  /* ---------- Hero dot field ----------
+     A grid of dots that breathes slowly and swells towards the cursor.
+     Static on touch devices and with reduced motion; pauses off-screen. */
+  $$('[data-dotfield]').forEach(function (cv) {
+    var ctx = cv.getContext('2d'); if (!ctx) return;
+    var host = cv.parentNode, W = 0, H = 0, dots = [], mx = -9999, my = -9999, sx = -9999, sy = -9999, visible = true, raf = 0;
+    var fine = w.matchMedia('(hover: hover) and (pointer: fine)').matches, animate = fine && !reduce;
+    function size() {
+      var dpr = Math.min(2, w.devicePixelRatio || 1), r = host.getBoundingClientRect();
+      W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var gap = W < 700 ? 24 : 30; dots = [];
+      for (var y = gap / 2; y < H; y += gap) for (var x = gap / 2; x < W; x += gap) dots.push(x, y);
+      if (!animate) draw(0);
+    }
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+      sx += (mx - sx) * .12; sy += (my - sy) * .12;
+      for (var i = 0; i < dots.length; i += 2) {
+        var x = dots[i], y = dots[i + 1], dx = x - sx, dy = y - sy, d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var inf = Math.max(0, 1 - d / 170), wave = (Math.sin(t / 1600 + x * .011 + y * .007) + 1) / 2;
+        var px = x + dx / d * inf * 14, py = y + dy / d * inf * 14;
+        if (inf > .02) {
+          ctx.fillStyle = 'rgba(131,239,192,' + (.25 + inf * .75).toFixed(3) + ')';
+          var s = 1.4 + inf * 3.2; ctx.fillRect(px - s / 2, py - s / 2, s, s);
+        } else {
+          ctx.fillStyle = 'rgba(246,243,236,' + (.13 + wave * .16).toFixed(3) + ')';
+          ctx.fillRect(px - .9, py - .9, 1.8, 1.8);
+        }
+      }
+    }
+    function loop(t) { draw(t); if (visible) raf = requestAnimationFrame(loop); }
+    size(); w.addEventListener('resize', size);
+    if (!animate) return;
+    host.addEventListener('mousemove', function (e) { var r = host.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; if (sx < -999) { sx = mx; sy = my; } });
+    host.addEventListener('mouseleave', function () { mx = my = -9999; });
+    if ('IntersectionObserver' in w) new IntersectionObserver(function (en) {
+      visible = en[0].isIntersecting; cancelAnimationFrame(raf); if (visible) raf = requestAnimationFrame(loop);
+    }).observe(host);
+    raf = requestAnimationFrame(loop);
+  });
+
   /* ---------- Article pages: reading progress + copy link ---------- */
   var prog = $('[data-read-progress]'), artBody = $('.article-body');
   if (prog && artBody) {

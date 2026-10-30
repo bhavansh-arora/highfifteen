@@ -1525,3 +1525,118 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; touch-acti
 @media (hover: hover) { .next-case:hover { background: var(--indigo); } .next-case:hover svg { transform: translateX(8px); } }
 .chips a.chip svg { width: 13px; height: 13px; }
 @media (hover: hover) { .chips a.chip:hover { background: var(--ink); color: var(--paper); box-shadow: none; } }
+
+/* ==========================================================================
+   Design v3 — editorial & bold. One accent system (mint on dark, indigo on
+   light). Colour is spent on a few deliberate moments, not scattered.
+   ========================================================================== */
+.acc-mint, .acc-coral, .acc-sun, .acc-orchid, .acc-tangerine, .acc-indigo { --accent: var(--mint); --accent-on-light: var(--indigo); }
+.atmos .orb:nth-child(3) { --orb-c: var(--indigo-2); opacity: .28; }
+
+/* Doodles: mint on dark, indigo on light */
+.doodle { --doodle: var(--indigo); }
+.t-ink .doodle, .t-ink-2 .doodle, .pathway-panel .doodle, .quiz .doodle, .cta-band .doodle, .svc-card--ink .doodle, .panel--ink .doodle, .site-footer .doodle, .page-hero .doodle, .hero .doodle { --doodle: var(--mint); }
+.t-mint .doodle { --doodle: var(--ink); }
+
+/* Icons: monochrome line badges instead of candy squares */
+.feature__ic { background: transparent !important; color: currentColor !important; box-shadow: inset 0 0 0 1px var(--line); border-radius: 50%; width: 52px; height: 52px; font-size: .95rem; transition: background-color .4s var(--ease), color .4s, box-shadow .4s; }
+@media (hover: hover) { .feature:hover .feature__ic { background: var(--ink) !important; color: var(--mint) !important; box-shadow: none; } .t-ink .feature:hover .feature__ic { background: var(--mint) !important; color: var(--ink) !important; } }
+.feature--num .feature__ic { box-shadow: none; border-radius: 0; width: auto; height: auto; }
+
+/* Avatars & mega menu: no candy colours */
+.quote__avatar { background: var(--ink) !important; color: var(--mint) !important; }
+.t-card--feature .quote__avatar, .t-ink .quote__avatar { background: var(--mint) !important; color: var(--ink) !important; }
+.mega__dot { background: transparent !important; box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); border-radius: 50%; }
+@media (hover: hover) { .mega__link:hover .mega__dot { background: var(--ink) !important; color: var(--mint); box-shadow: none; } }
+
+/* Cards & stats in the core palette */
+.svc-card--coral { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line), 0 -20px 60px -30px rgba(13, 11, 31, .3); --line: rgba(13, 11, 31, .12); --muted: #5a566e; }
+.svc-card--coral .dots li::before { background: var(--indigo); }
+.stat--sun, .stat--coral { background: var(--mint); color: var(--ink); }
+.read-progress i { background: var(--mint); }
+@media (hover: hover) { .tag-cloud span:hover { background: var(--ink); color: var(--mint); transform: translateY(-3px); } .t-ink .tag-cloud span:hover { background: var(--mint); color: var(--ink); } }
+.article-body ul li::before { background: var(--indigo); }
+
+/* Rotating word: one confident pill */
+.rotator { background: var(--mint) !important; }
+
+/* Hero badge: fine outline ring instead of a yellow sticker */
+.hero__media .sticker svg.ring circle, .founder__media .sticker svg.ring circle { fill: rgba(13, 11, 31, .55); stroke: rgba(246, 243, 236, .35); stroke-width: 1; }
+.hero__media .sticker text, .founder__media .sticker text { fill: var(--paper); }
+.hero__media .sticker__core, .founder__media .sticker__core { background: var(--mint); color: var(--ink); }
+.sticker { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 50%; }
+
+/* Portrait: a thin offset line frame, not a coloured block */
+.portrait-card__frame { background: transparent; border: 1.5px solid var(--mint); transform: translate(-18px, 18px) rotate(-1.5deg); opacity: .8; }
+.portrait-card { transform: rotate(1.5deg); }
+.frame-offset::before { display: none; }
+.founder__media::before { content: ''; position: absolute; inset: 0; border: 1.5px solid var(--indigo); border-radius: var(--radius); transform: translate(18px, 18px); pointer-events: none; }
+.t-ink .founder__media::before { border-color: var(--mint); }
+.founder__media .media-card { z-index: 1; }
+.founder__media .sticker { z-index: 2; }
+
+/* ---------- Hero graphics: interactive dot field + orbiting rings ---------- */
+.dotfield { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 60% 45%, #000 30%, transparent 80%); mask-image: radial-gradient(ellipse 80% 75% at 60% 45%, #000 30%, transparent 80%); }
+.hero .grid-lines { display: none; }
+.hero__media { perspective: 1200px; }
+.hero__media .portrait-card, .hero__media .portrait-card__frame { transform-style: preserve-3d; }
+.rings { position: absolute; left: -25%; top: -25%; width: 150%; height: 150%; z-index: -1; overflow: visible; pointer-events: none; }
+.rings circle { fill: none; stroke: rgba(246, 243, 236, .14); stroke-width: 1; transform-origin: 300px 300px; }
+.rings .r1 { stroke-dasharray: 2 10; animation: spin 90s linear infinite; }
+.rings .r2 { stroke: rgba(131, 239, 192, .28); stroke-dasharray: 60 14 4 14; animation: spin 60s linear infinite reverse; }
+.rings .r3 { stroke-dasharray: 1 6; animation: spin 120s linear infinite; }
+.rings .r4 { stroke: var(--mint); stroke-width: 2; stroke-dasharray: 9 91; stroke-linecap: round; animation: spin 14s linear infinite; }
+@media (max-width: 1079px) { .rings { left: -15%; top: -15%; width: 130%; height: 130%; } }
+
+/* ---------- "We want you to feel": outline words that fill as you scroll ---------- */
+.feel2 { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: none; }
+.feel2 li { display: flex; align-items: baseline; gap: 16px; border-top: 1px solid var(--line); padding-top: 6px; }
+.feel2 li:last-child { border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+.feel2__n { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; color: var(--muted); flex: none; width: 22px; }
+.feel2__w {
+  --f: 0%;
+  font-family: var(--f-display); font-weight: 750; letter-spacing: -.035em; line-height: 1.02;
+  font-size: clamp(2.4rem, 5.2vw, 5rem);
+  color: transparent; -webkit-text-stroke: 1.2px var(--ink);
+  background: linear-gradient(90deg, var(--ink) var(--f), transparent var(--f));
+  -webkit-background-clip: text; background-clip: text;
+}
+html:not(.motion-ok) .feel2__w { --f: 100%; }
+
+/* ---------- Big ticker: alternating solid / outline, leans with scroll speed ---------- */
+.ticker { border-block: 0; padding-block: clamp(26px, 3.4vw, 46px); }
+.ticker .marquee__track { will-change: transform; }
+.ticker__item { font-size: clamp(2.6rem, 6.4vw, 6.4rem); letter-spacing: -.04em; text-transform: none; }
+.ticker .marquee__group > .ticker__item:nth-child(even) { color: transparent; -webkit-text-stroke: 1.4px var(--ink); }
+.ticker .marquee__group > .ticker__item:nth-child(even) .it { -webkit-text-stroke: 0; color: var(--indigo); }
+.ticker__item svg { color: var(--mint); width: .55em; height: .55em; }
+
+/* ---------- Footer wordmark filled with Vanessa's painting ---------- */
+.footer-mega .ml { color: transparent; -webkit-text-stroke: 0; background-image: url(../img/painting-texture.webp); background-repeat: no-repeat; background-size: 1400px auto; -webkit-background-clip: text; background-clip: text; transition: transform .55s cubic-bezier(.34, 1.7, .64, 1), filter .4s; }
+html:not(.motion-ok) .footer-mega, .footer-mega:not(:has(.ml)) { color: var(--mint); -webkit-text-stroke: 0; }
+@media (hover: hover) { .footer-mega .ml:hover { transform: translateY(-12%); filter: saturate(1.25); } }
+.footer-mega.is-lit .ml { color: transparent; }
+
+/* ---------- Mask-wipe image reveals ---------- */
+.motion-ok [data-wipe] { clip-path: inset(100% 0 0 0 round 0px); }
+.motion-ok [data-wipe].is-wiped { clip-path: none; }
+.motion-ok [data-wipe] img { transform: scale(1.18); }
+.sticker__core { position: relative; z-index: 1; }
+.rings .r1 { stroke: rgba(246, 243, 236, .22); }
+.rings .r2 { stroke: rgba(131, 239, 192, .45); }
+.rings .r3 { stroke: rgba(246, 243, 236, .2); }
+
+/* Footer wordmark v2: letters rise showing the painting, then mint pours down
+   over each one. Hovering a letter pulls the mint back to reveal the painting. */
+.footer-mega .ml {
+  --cov: 0%;
+  background-image: linear-gradient(var(--mint), var(--mint)), url(../img/painting-texture.webp);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% var(--cov), var(--bgw, 1400px) auto;
+  background-position: 0 0, var(--bgx, 0px) 50%;
+  transition: background-size .9s cubic-bezier(.65, 0, .35, 1) calc(var(--i) * 70ms), transform .55s cubic-bezier(.34, 1.7, .64, 1);
+}
+.footer-mega.is-lit .ml { --cov: 100%; }
+@media (hover: hover) { .footer-mega.is-lit .ml:hover { --cov: 0%; transition-delay: 0s; filter: none; } }
+@media (hover: none), (max-width: 900px) { .rings circle, .sticker svg.ring { animation: none; } }

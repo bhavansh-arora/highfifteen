@@ -170,21 +170,76 @@
   });
 
   /* ---------- Footer giant word ---------- */
-  /* ---------- Footer wordmark: letters rise, fill with colour, jump on hover ---------- */
+  /* ---------- Footer wordmark: letters filled with Vanessa's painting ----------
+     Each letter clips the same wide painting texture, offset by its position,
+     so the word reads as one continuous canvas. */
   var mega = $('[data-mega]');
   if (mega) {
-    var palette = ['var(--mint)', 'var(--sun)', 'var(--coral)', 'var(--orchid)', 'var(--tangerine)', 'var(--indigo-2)'];
     var n = 0;
     mega.innerHTML = mega.textContent.split('').map(function (ch) {
       if (ch === ' ') return '<span class="sp"></span>';
-      var k = n++;
-      return '<span class="ml" style="--c:' + palette[k % palette.length] + ';--i:' + k + ';--rt:' + (k % 2 ? 6 : -6) + 'deg">' + ch + '</span>';
+      return '<span class="ml" style="--i:' + (n++) + '">' + ch + '</span>';
     }).join('');
     var letters = $$('.ml', mega);
-    g.fromTo(letters, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.1, ease: 'expo.out', stagger: .05,
-      scrollTrigger: { trigger: mega, start: 'top 95%', once: true, onEnter: function () { setTimeout(function () { mega.classList.add('is-lit'); }, 350); } },
+    var paint = function () {
+      var W = mega.scrollWidth;
+      letters.forEach(function (l) { l.style.setProperty('--bgw', W + 'px'); l.style.setProperty('--bgx', (-l.offsetLeft) + 'px'); });
+    };
+    paint(); w.addEventListener('resize', paint);
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(paint);
+    g.fromTo(letters, { yPercent: 80, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.2, ease: 'expo.out', stagger: .045,
+      scrollTrigger: { trigger: mega, start: 'top 95%', once: true, onEnter: function () { setTimeout(function () { mega.classList.add('is-lit'); }, 900); } },
       onComplete: function () { g.set(letters, { clearProps: 'transform' }); } });
   }
+
+  /* ---------- "We want you to feel": outline words fill as you scroll ---------- */
+  $$('[data-feel2]').forEach(function (list) {
+    $$('.feel2__w', list).forEach(function (wd) {
+      g.fromTo(wd, { '--f': '0%' }, { '--f': '100%', ease: 'none', scrollTrigger: { trigger: wd, start: 'top 85%', end: 'top 45%', scrub: .4 } });
+    });
+  });
+
+  /* ---------- Big ticker: speed and lean follow scroll velocity ---------- */
+  $$('.ticker .marquee__track').forEach(function (track) {
+    var anim = track.getAnimations ? track.getAnimations()[0] : null;
+    var skewTo = g.quickTo(track, 'skewX', { duration: .5, ease: 'power3' });
+    var rate = 1, target = 1;
+    ST.create({ trigger: track.closest('.ticker'), start: 'top bottom', end: 'bottom top', onUpdate: function (self) {
+      var v = self.getVelocity();
+      target = Math.max(-6, Math.min(6, 1 + v / 300)); if (Math.abs(target) < 1) target = target < 0 ? -1 : 1;
+      skewTo(Math.max(-10, Math.min(10, -v / 220)));
+    } });
+    g.ticker.add(function () {
+      rate += (target - rate) * .08; target += ((target > 0 ? 1 : -1) - target) * .04;
+      if (anim) anim.playbackRate = rate;
+    });
+    ST.addEventListener('scrollEnd', function () { skewTo(0); });
+  });
+
+  /* ---------- Mask-wipe image reveals ---------- */
+  $$('[data-wipe]').forEach(function (el) {
+    var img = $('img', el);
+    var tl = g.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', once: true }, onComplete: function () { el.classList.add('is-wiped'); g.set(el, { clearProps: 'clipPath' }); } });
+    tl.to(el, { clipPath: 'inset(0% 0 0 0 round 0px)', duration: 1.3, ease: 'expo.inOut' }, 0);
+    if (img) tl.to(img, { scale: 1, duration: 1.8, ease: 'expo.out' }, .1);
+  });
+
+  /* ---------- Portrait: gentle 3D tilt towards the cursor ---------- */
+  mm.add('(hover: hover) and (pointer: fine) and (min-width: 1080px)', function () {
+    var box = $('[data-tilt]'); if (!box) return;
+    var card = $('.portrait-card', box), frame = $('.portrait-card__frame', box), rings = $('.rings', box);
+    var hero = box.closest('section');
+    var rx = g.quickTo(card, 'rotationX', { duration: .8, ease: 'power3' }), ry = g.quickTo(card, 'rotationY', { duration: .8, ease: 'power3' });
+    var fx = g.quickTo(frame, 'x', { duration: 1, ease: 'power3' }), fy = g.quickTo(frame, 'y', { duration: 1, ease: 'power3' });
+    var gx = g.quickTo(rings, 'x', { duration: 1.4, ease: 'power3' }), gy = g.quickTo(rings, 'y', { duration: 1.4, ease: 'power3' });
+    var move = function (e) {
+      var r = box.getBoundingClientRect(), px = (e.clientX - (r.left + r.width / 2)) / innerWidth, py = (e.clientY - (r.top + r.height / 2)) / innerHeight;
+      ry(px * 14); rx(-py * 12); fx(-18 - px * 22); fy(18 - py * 22); gx(-px * 30); gy(-py * 30);
+    };
+    hero.addEventListener('mousemove', move);
+    hero.addEventListener('mouseleave', function () { rx(0); ry(0); fx(-18); fy(18); gx(0); gy(0); });
+    return function () { hero.removeEventListener('mousemove', move); };
+  });
 
   /* ---------- Testimonial word cascade ---------- */
   HF.animateQuote = function (fig) {
