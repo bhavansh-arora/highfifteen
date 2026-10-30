@@ -59,10 +59,10 @@
         .to('.preloader__bar i', { scaleX: 1, duration: .9, ease: 'power2.inOut' }, 0.05)
         .to(obj, { v: 15, duration: .9, ease: 'power2.inOut', onUpdate: function () { counter.textContent = String(Math.round(obj.v)).padStart(2, '0'); } }, 0.1)
         .to('.preloader__inner', { y: -40, opacity: 0, duration: .35, ease: 'power3.in' }, '+=.05')
-        .set('.preloader__panel', { yPercent: 100 })
-        .to('.preloader__panel', { yPercent: 0, duration: .45, ease: 'power3.inOut' }, '-=.15')
+        // Explicit y:0 so GSAP never mixes a pixel offset (read from the CSS) with yPercent.
+        .fromTo('.preloader__panel', { y: 0, yPercent: 100 }, { y: 0, yPercent: 0, duration: .45, ease: 'power3.inOut' }, '-=.15')
         .set('.preloader', { display: 'none' })
-        .to('.preloader__panel', { yPercent: -100, duration: .55, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 120); } })
+        .fromTo('.preloader__panel', { y: 0, yPercent: 0 }, { y: 0, yPercent: -100, immediateRender: false, duration: .55, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 120); } })
         .set('.preloader__panel', { display: 'none' });
     } else if (h.classList.contains('is-entering') && g) {
       g.timeline({ onComplete: function () { g.set('.curtain', { clearProps: 'all' }); } })
