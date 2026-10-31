@@ -249,15 +249,40 @@
       });
       movePill(tab);
       if (focus) tab.focus();
+      root.dispatchEvent(new CustomEvent('hf:tab', { detail: { panel: d.getElementById(tab.getAttribute('aria-controls')) } }));
       if (w.ScrollTrigger) setTimeout(function () { w.ScrollTrigger.refresh(); }, 50);
     }
+    // Optional auto-play (data-autoplay="ms"): cycles while on screen, pauses on hover,
+    // stops for good once the visitor picks a tab themselves.
+    var auto = +root.getAttribute('data-autoplay') || 0, raf = 0, last = 0, elapsed = 0, inView = false, hovering = false, stopped = reduce || !auto;
+    if (auto) tabs.forEach(function (t) { var b = d.createElement('span'); b.className = 'pathway-tab__bar'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i></i>'; t.appendChild(b); });
+    function current() { return tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0]; }
+    function frame(ts) {
+      if (stopped) return;
+      if (!last) last = ts;
+      if (inView && !hovering) elapsed += ts - last;
+      last = ts;
+      var cur = current(), bar = cur && $('.pathway-tab__bar', cur);
+      if (bar) bar.style.setProperty('--p', Math.min(1, elapsed / auto));
+      if (elapsed >= auto) { elapsed = 0; if (bar) bar.style.setProperty('--p', 0); select(tabs[(tabs.indexOf(cur) + 1) % tabs.length]); }
+      raf = requestAnimationFrame(frame);
+    }
+    function stopAuto() { if (stopped) return; stopped = true; cancelAnimationFrame(raf); root.classList.remove('is-auto'); }
+    if (!stopped) {
+      root.classList.add('is-auto');
+      root.addEventListener('mouseenter', function () { hovering = true; });
+      root.addEventListener('mouseleave', function () { hovering = false; });
+      if ('IntersectionObserver' in w) new IntersectionObserver(function (en) { inView = en[0].isIntersecting; }, { threshold: .35 }).observe(root);
+      else inView = true;
+      raf = requestAnimationFrame(frame);
+    }
     tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { select(t); });
+      t.addEventListener('click', function (e) { if (e.isTrusted) stopAuto(); select(t); });
       t.addEventListener('keydown', function (e) {
         var k = e.key, n = null;
         if (k === 'ArrowRight' || k === 'ArrowDown') n = tabs[(i + 1) % tabs.length];
         if (k === 'ArrowLeft' || k === 'ArrowUp') n = tabs[(i - 1 + tabs.length) % tabs.length];
-        if (n) { e.preventDefault(); select(n, true); }
+        if (n) { e.preventDefault(); stopAuto(); select(n, true); }
       });
     });
     var start = tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0] || tabs[0];

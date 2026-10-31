@@ -85,7 +85,7 @@
         </div>
         <p class="lead muted" data-reveal>Pick the seat closest to yours and we’ll show you exactly how we help. No guesswork, no generic packages.</p>
       </div>
-      <div class="pathways" data-tabs>
+      <div class="pathways pathways--rich" data-tabs data-autoplay="7000">
         <div class="pathways__tabs" role="tablist" aria-label="Who are you?">
           <button class="pathway-tab" role="tab" id="pt-1" aria-controls="pp-1" aria-selected="true"><span class="pathway-tab__n">01</span><span class="pathway-tab__t">I lead an organisation<small>CEO, MD, founder or leadership team</small></span><span class="pathway-tab__ic">{{i:arrow}}</span></button>
           <button class="pathway-tab" role="tab" id="pt-2" aria-controls="pp-2" aria-selected="false" tabindex="-1"><span class="pathway-tab__n">02</span><span class="pathway-tab__t">I lead People &amp; HR<small>CHRO, CPO, HRD or HR business partner</small></span><span class="pathway-tab__ic">{{i:arrow}}</span></button>
@@ -93,41 +93,57 @@
           <button class="pathway-tab" role="tab" id="pt-4" aria-controls="pp-4" aria-selected="false" tabindex="-1"><span class="pathway-tab__n">04</span><span class="pathway-tab__t">I’m booking a speaker<small>Conference, offsite or leadership event</small></span><span class="pathway-tab__ic">{{i:arrow}}</span></button>
         </div>
 
-        <div class="pathway-panel grain" role="tabpanel" id="pp-1" aria-labelledby="pt-1">
+        <div class="pathway-panel pathway-panel--media grain" role="tabpanel" id="pp-1" aria-labelledby="pt-1">
           <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span></div>
+          <div class="pathway-panel__content">
+          <span class="pathway-panel__kicker">01 · Organisations</span>
           <h3 class="h-m">Stabilise performance. <span class="it">Strengthen execution.</span></h3>
           <div class="pathway-panel__cols">
             <div><h4>Sounds familiar?</h4><ul class="dots"><li>Decision-making is slowing down</li><li>Leaders are stretched or exhausted</li><li>Culture is quietly undermining execution</li><li>Change needs to land without damage</li></ul></div>
             <div><h4>How we help</h4><ul class="dots"><li>Culture audits, resets and transformation partnerships</li><li>Leadership team and senior leader coaching</li><li>Learning that builds capability that lasts</li></ul></div>
           </div>
           <div class="btn-row btn-row--stack"><x-btn href="contact.html?type=organisation" variant="mint">Talk to Vanessa</x-btn><x-btn href="culture.html" variant="ghost">Explore culture work</x-btn></div>
+          </div>
+          <figure class="pathway-panel__media"><x-img name="culture-workshop" alt="Vanessa running a culture workshop" sizes="(min-width: 1080px) 26vw, 92vw"><figcaption>CEOs, MDs &amp; leadership teams</figcaption></figure>
         </div>
-        <div class="pathway-panel grain" role="tabpanel" id="pp-2" aria-labelledby="pt-2" hidden>
+        <div class="pathway-panel pathway-panel--media grain" role="tabpanel" id="pp-2" aria-labelledby="pt-2" hidden>
           <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span></div>
+          <div class="pathway-panel__content">
+          <span class="pathway-panel__kicker">02 · People &amp; HR</span>
           <h3 class="h-m">You carry a lot. <span class="it">You shouldn’t carry it alone.</span></h3>
           <div class="pathway-panel__cols">
             <div><h4>Sounds familiar?</h4><ul class="dots"><li>Expected to drive culture change and make it look effortless</li><li>Balancing long-term strategy with daily firefighting</li><li>Training that never leaves the room</li></ul></div>
             <div><h4>How we help</h4><ul class="dots"><li>Co-created, inclusive people strategy</li><li>Workshops people want to attend again and again</li><li>Confidential coaching for HR leaders</li><li>Conflict resolution and mediation</li></ul></div>
           </div>
           <div class="btn-row btn-row--stack"><x-btn href="contact.html?type=hr" variant="mint">Talk to Vanessa</x-btn><x-btn href="hr-hub.html" variant="ghost">Visit the HR Hub</x-btn></div>
+          </div>
+          <figure class="pathway-panel__media"><x-img name="conference-tables" alt="A leadership group working at tables" sizes="(min-width: 1080px) 26vw, 92vw"><figcaption>CHROs, CPOs, HRDs &amp; HRBPs</figcaption></figure>
         </div>
-        <div class="pathway-panel grain" role="tabpanel" id="pp-3" aria-labelledby="pt-3" hidden>
+        <div class="pathway-panel pathway-panel--media grain" role="tabpanel" id="pp-3" aria-labelledby="pt-3" hidden>
           <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span></div>
+          <div class="pathway-panel__content">
+          <span class="pathway-panel__kicker">03 · Individuals</span>
           <h3 class="h-m">Lead with clarity, presence <span class="it">and authority.</span></h3>
           <div class="pathway-panel__cols">
             <div><h4>Sounds familiar?</h4><ul class="dots"><li>Pulled in too many directions</li><li>Decision fatigue, hesitation or imposter syndrome</li><li>Stepping up into a bigger role</li><li>Boundaries and people complexity</li></ul></div>
             <div><h4>How we help</h4><ul class="dots"><li>Focused 1:1 executive coaching, from three months</li><li>Strengthscope® and EQ-i 2.0 psychometrics</li><li>Support between sessions, so you are never alone</li></ul></div>
           </div>
           <div class="btn-row btn-row--stack"><x-btn href="contact.html?type=individual" variant="mint">Book a chemistry session</x-btn><x-btn href="coaching.html" variant="ghost">Explore coaching</x-btn></div>
+          </div>
+          <figure class="pathway-panel__media"><x-img name="hr-conversation" alt="Two women in a one-to-one coaching conversation" sizes="(min-width: 1080px) 26vw, 92vw"><figcaption>Senior leaders, directors &amp; founders</figcaption></figure>
         </div>
-        <div class="pathway-panel grain" role="tabpanel" id="pp-4" aria-labelledby="pt-4" hidden>
+        <div class="pathway-panel pathway-panel--media grain" role="tabpanel" id="pp-4" aria-labelledby="pt-4" hidden>
           <div class="atmos" aria-hidden="true"><span class="orb"></span><span class="orb"></span></div>
+          <div class="pathway-panel__content">
+          <span class="pathway-panel__kicker">04 · Events</span>
           <h3 class="h-m">Moments that land, and <span class="it">lead to action.</span></h3>
           <div class="pathway-panel__cols">
             <div><h4>Sounds familiar?</h4><ul class="dots"><li>Audiences that listen politely, then forget</li><li>Panels that lack depth or direction</li><li>Events that don’t drive follow-through</li></ul></div>
             <div><h4>How we help</h4><ul class="dots"><li>Keynotes rooted in behaviour shift</li><li>Purposeful panel moderation and emceeing</li><li>Strategic facilitation and event design</li><li>TEDx speaker with proven stage energy</li></ul></div>
           </div>
           <div class="btn-row btn-row--stack"><x-btn href="contact.html?type=speaking" variant="mint">Check Vanessa’s availability</x-btn><x-btn href="speaking.html" variant="ghost">Explore speaking</x-btn></div>
+          </div>
+          <figure class="pathway-panel__media"><x-img name="womens-leadership-stage" alt="Vanessa on stage at a Women's Leadership Summit" sizes="(min-width: 1080px) 26vw, 92vw"><figcaption>Conferences, offsites &amp; panels</figcaption></figure>
         </div>
       </div>
     </div>

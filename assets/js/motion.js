@@ -241,6 +241,31 @@
     return function () { hero.removeEventListener('mousemove', move); };
   });
 
+  /* ---------- Pathway panels: photo wipe, headline rise, list stagger ---------- */
+  function playPanel(panel) {
+    if (!panel || !panel.classList.contains('pathway-panel')) return;
+    var media = $('.pathway-panel__media', panel), img = media && $('img', media);
+    var words = splitWords($('h3', panel)), items = $$('.pathway-panel__kicker, h4, .dots li, .btn-row', panel);
+    g.killTweensOf([media, img, words, items]);
+    if (media) {
+      g.fromTo(media, { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'expo.inOut', clearProps: 'clipPath' });
+      g.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 1.6, ease: 'expo.out' });
+    }
+    g.fromTo(words, { y: '115%' }, { y: 0, duration: .9, ease: 'expo.out', stagger: .035, delay: .1 });
+    g.fromTo(items, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .7, ease: 'power3.out', stagger: .035, delay: .25 });
+  }
+  $$('[data-tabs]').forEach(function (root) {
+    root.addEventListener('hf:tab', function (e) { playPanel(e.detail.panel); });
+    var first = $('.pathway-panel:not([hidden])', root);
+    if (first) {
+      var fm = $('.pathway-panel__media', first);
+      g.set(splitWords($('h3', first)), { y: '115%' });
+      g.set($$('.pathway-panel__kicker, h4, .dots li, .btn-row', first), { opacity: 0, y: 18 });
+      if (fm) g.set(fm, { clipPath: 'inset(0% 0% 0% 100%)' });
+      ST.create({ trigger: root, start: 'top 70%', once: true, onEnter: function () { playPanel(first); } });
+    }
+  });
+
   /* ---------- Testimonial word cascade ---------- */
   HF.animateQuote = function (fig) {
     var bq = $('blockquote', fig); if (!bq) return;
