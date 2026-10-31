@@ -721,6 +721,7 @@
 
   /* ---------- Homepage graphics on every inner page header ---------- */
   $$('.page-hero').forEach(function (hero) {
+    if (hero.hasAttribute('data-plain')) return;   // photo-led heroes skip the dot field
     if (!$('[data-dotfield]', hero)) { var c = d.createElement('canvas'); c.className = 'dotfield'; c.setAttribute('data-dotfield', ''); c.setAttribute('aria-hidden', 'true'); hero.insertBefore(c, hero.firstChild); }
     var media = $('.page-hero__media', hero);
     if (media && !$('.rings', media)) {

@@ -290,6 +290,20 @@
     }
   });
 
+  /* ---------- Hero variant scroll effects ---------- */
+  $$('[data-hv-drift]').forEach(function (el) {   // About: giant name drifts sideways
+    g.fromTo(el, { xPercent: 4 }, { xPercent: -18, ease: 'none', scrollTrigger: { trigger: el.closest('section'), start: 'top top', end: 'bottom top', scrub: true } });
+  });
+  $$('.hv-bleed__img img').forEach(function (img) {   // Culture: slow zoom
+    g.fromTo(img, { scale: 1.12 }, { scale: 1, yPercent: 8, ease: 'none', scrollTrigger: { trigger: img.closest('section'), start: 'top top', end: 'bottom top', scrub: true } });
+  });
+  $$('[data-hv-stage]').forEach(function (fr) {   // Speaking: full-width stage shrinks into a framed card
+    var gut = function () { return getComputedStyle(document.documentElement).getPropertyValue('--gutter') || '24px'; };
+    g.fromTo(fr, { clipPath: 'inset(0px 0px 0px 0px round 0px)' }, { clipPath: function () { return 'inset(0px ' + gut().trim() + ' 40px ' + gut().trim() + ' round 32px)'; }, ease: 'none',
+      scrollTrigger: { trigger: fr, start: 'top 75%', end: 'bottom 30%', scrub: true, invalidateOnRefresh: true } });
+    g.fromTo($('img', fr), { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: fr, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
   /* ---------- Testimonial word cascade ---------- */
   HF.animateQuote = function (fig) {
     var bq = $('blockquote', fig); if (!bq) return;
