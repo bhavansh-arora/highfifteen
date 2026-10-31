@@ -245,6 +245,26 @@
     return function () { offs.forEach(function (f) { f(); }); };
   });
 
+  /* ---------- Pathway cards on phones: 3D lift, photo wipe + parallax, number slide, text cascade ---------- */
+  function stackCards(root) {
+    $$('.pathway-panel', root).forEach(function (card) {
+      var media = $('.pathway-panel__media', card), img = media && $('img', media), num = $('.pw-num', card);
+      var words = splitWords($('h3', card)), items = $$('.pathway-panel__kicker, h4, .dots li, .btn-row', card);
+      g.set(card, { transformPerspective: 900, transformOrigin: '50% 0%' });
+      var tl = g.timeline({ scrollTrigger: { trigger: card, start: 'top 88%', once: true } });
+      tl.fromTo(card, { y: 90, rotationX: 14, scale: .94, opacity: 0 }, { y: 0, rotationX: 0, scale: 1, opacity: 1, duration: 1.2, ease: 'expo.out', clearProps: 'transform' }, 0);
+      if (media) {
+        tl.fromTo(media, { clipPath: 'inset(100% 0% 0% 0% round 16px)' }, { clipPath: 'inset(0% 0% 0% 0% round 16px)', duration: 1.1, ease: 'expo.inOut' }, .15);
+        tl.fromTo(img, { scale: 1.35 }, { scale: 1.12, duration: 1.6, ease: 'expo.out' }, .15);
+      }
+      if (num) tl.fromTo(num, { xPercent: 60, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .9, ease: 'expo.out' }, .55);
+      tl.fromTo(words, { y: '115%' }, { y: 0, duration: .9, ease: 'expo.out', stagger: .04 }, .45);
+      tl.fromTo(items, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .6, ease: 'power3.out', stagger: .045 }, .65);
+      // gentle parallax drift of the photo while the card is on screen
+      if (img) g.fromTo(img, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
+    });
+  }
+
   /* ---------- Pathway panels: photo wipe, headline rise, list stagger ---------- */
   function playPanel(panel) {
     if (!panel || !panel.classList.contains('pathway-panel')) return;
@@ -259,6 +279,7 @@
     g.fromTo(items, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .7, ease: 'power3.out', stagger: .035, delay: .25 });
   }
   $$('[data-tabs]').forEach(function (root) {
+    if (root.classList.contains('is-stack')) { stackCards(root); return; }
     root.addEventListener('hf:tab', function (e) { playPanel(e.detail.panel); });
     var first = $('.pathway-panel:not([hidden])', root);
     if (first) {

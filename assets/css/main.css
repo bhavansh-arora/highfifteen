@@ -1804,3 +1804,14 @@ figure { margin: 0; }
 }
 /* Intro elements start hidden so they only ever fade in (no flash before the animation starts) */
 .is-loading .pl-logo, .is-loading .pl-label, .is-loading .pl-foot, .is-loading .pl-count, .is-loading .pl-word { opacity: 0; }
+
+/* "Where are you sitting?" on phones v2: four full cards, no pinning */
+@media (max-width: 1079px) {
+  .pathways.is-stack .pw-sticky { display: none !important; }
+  .pathways.is-stack .pathway-panel { margin-bottom: 18px; will-change: transform; }
+  .pathways.is-stack .pathway-panel__media { display: block; order: -1; margin: 10px 10px 0; border-radius: 16px; aspect-ratio: 16 / 11; min-height: 0; }
+  .pathways.is-stack .pathway-panel__media img { height: 112%; top: -6%; }
+  .pathways.is-stack .pathway-panel__media figcaption { right: 90px; }
+  .pw-num { position: absolute; right: 14px; bottom: 6px; z-index: 3; font-family: var(--f-display); font-weight: 800; letter-spacing: -.04em; line-height: 1; font-size: clamp(3rem, 15vw, 4.4rem); color: var(--paper); }
+  .pathways.is-stack .pathway-panel__content { padding: 22px 20px 26px; }
+}

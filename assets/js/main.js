@@ -276,43 +276,16 @@
       root.dispatchEvent(new CustomEvent('hf:tab', { detail: { panel: d.getElementById(tab.getAttribute('aria-controls')) } }));
       if (w.ScrollTrigger) setTimeout(function () { w.ScrollTrigger.refresh(); }, 50);
     }
-    // Phones/tablets (panels with photos): all options stacked, a pinned photo above them
-    // that switches as each option's text scrolls past.
+    // Phones/tablets (panels with photos): every option is shown as its own card, stacked.
+    // Each card animates in as it scrolls into view (see motion.js); nothing is pinned.
     var stackMode = false;
     if (root.classList.contains('pathways--rich') && w.matchMedia('(max-width: 1079px)').matches) {
       stackMode = true; root.classList.add('is-stack');
-      var panels = tabs.map(function (t) { return d.getElementById(t.getAttribute('aria-controls')); });
-      var sticky = d.createElement('div'); sticky.className = 'pw-sticky'; sticky.setAttribute('aria-hidden', 'true');
-      var frame = '<div class="pw-sticky__frame">', dots = '';
-      panels.forEach(function (p, k) {
-        var im = $('.pathway-panel__media img', p);
-        if (im) { var c = im.cloneNode(); c.removeAttribute('loading'); c.alt = ''; if (k === 0) c.className = 'on'; frame += c.outerHTML; }
-        dots += '<i' + (k === 0 ? ' class="on"' : '') + '></i>';
+      tabs.forEach(function (t, k) {
+        var p = d.getElementById(t.getAttribute('aria-controls')); p.hidden = false;
+        var fig = $('.pathway-panel__media', p);
+        if (fig && !$('.pw-num', fig)) fig.insertAdjacentHTML('beforeend', '<span class="pw-num" aria-hidden="true">' + String(k + 1).padStart(2, '0') + '</span>');
       });
-      frame += '<div class="pw-sticky__meta"><span class="pw-sticky__cap"></span><span class="pw-sticky__n"></span></div></div><div class="pw-sticky__dots">' + dots + '</div>';
-      sticky.innerHTML = frame;
-      panels[0].parentNode.insertBefore(sticky, panels[0]);
-      var imgs = $$('.pw-sticky__frame img', sticky), dotEls = $$('.pw-sticky__dots i', sticky);
-      var cap = $('.pw-sticky__cap', sticky), num = $('.pw-sticky__n', sticky), active = -1;
-      var setActive = function (k) {
-        if (k === active) return; active = k;
-        imgs.forEach(function (im, j) { im.classList.toggle('on', j === k); });
-        dotEls.forEach(function (dd, j) { dd.classList.toggle('on', j <= k); });
-        var fc = $('.pathway-panel__media figcaption', panels[k]);
-        cap.textContent = fc ? fc.textContent : '';
-        num.textContent = String(k + 1).padStart(2, '0') + ' / ' + String(panels.length).padStart(2, '0');
-        tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === k ? 'true' : 'false'); });
-      };
-      panels.forEach(function (p) { p.hidden = false; });
-      setActive(0);
-      // The option whose text crosses the band just under the pinned photo is the active one
-      var pick = function () {
-        var line = (stickyBottom() + w.innerHeight) / 2, best = 0;
-        panels.forEach(function (p, k) { if (p.getBoundingClientRect().top < line) best = k; });
-        setActive(best);
-      };
-      var stickyBottom = function () { return sticky.getBoundingClientRect().bottom; };
-      w.addEventListener('scroll', function () { requestAnimationFrame(pick); }, { passive: true });
       w.addEventListener('resize', function () {
         if (w.matchMedia('(min-width: 1080px)').matches && root.classList.contains('is-stack')) location.reload();
       });
