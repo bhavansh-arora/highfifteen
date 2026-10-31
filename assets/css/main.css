@@ -450,21 +450,29 @@ h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: inherit; }
 
 /* ---------- Preloader & page curtain ---------- */
 .preloader, .curtain { display: none; }
-.is-loading .preloader {
-  display: grid; place-items: center; position: fixed; inset: 0; z-index: 1000; background: var(--ink); color: var(--paper);
-}
-.preloader__inner { position: relative; display: grid; justify-items: center; gap: 18px; text-align: center; }
-.preloader__logo { width: clamp(150px, 18vw, 220px); opacity: 0; }
-.preloader__count {
-  font-family: var(--f-display); font-weight: 800; letter-spacing: -.05em;
-  font-size: clamp(5rem, 16vw, 13rem); line-height: .85; color: var(--mint);
-  font-variant-numeric: tabular-nums;
-}
-.preloader__label { font-family: var(--f-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; opacity: .6; }
-.preloader__bar { width: min(260px, 60vw); height: 2px; background: rgba(246, 243, 236, .15); border-radius: 2px; overflow: hidden; }
-.preloader__bar i { display: block; height: 100%; width: 100%; background: var(--mint); transform-origin: left; transform: scaleX(0); }
-.preloader__panel { position: fixed; inset: 0; z-index: 999; background: var(--mint); transform: translateY(100%); }
-.is-loading .preloader__panel { display: block; }
+/* Intro (desktop, first visit): rolling 00→15 counter, then shutters lift away */
+/* Always fixed: the intro stays on screen briefly after .is-loading is removed */
+.preloader { position: fixed; inset: 0; z-index: 1000; color: var(--paper); }
+.is-loading .preloader { display: block; }
+.pl-cols { position: absolute; inset: 0; display: flex; }
+.pl-cols i { flex: 1; height: 100%; margin-right: -1px; background: var(--ink); box-shadow: inset 0 -2px 0 var(--mint), inset -1px 0 0 rgba(246, 243, 236, .06); }
+.pl-ui { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(26px, 3.2vw, 46px) var(--gutter); }
+.pl-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.pl-logo { width: clamp(96px, 8vw, 128px); height: auto; }
+.pl-label { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: rgba(246, 243, 236, .55); }
+.pl-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+.pl-count { display: flex; font-family: var(--f-display); font-weight: 800; letter-spacing: -.04em; font-size: clamp(9rem, 27vw, 26rem); line-height: .8; height: .8em; overflow: hidden; margin-bottom: -.06em; font-variant-numeric: tabular-nums; transition: color .5s ease; }
+.pl-count.is-done { color: var(--mint); }
+.pl-col { display: flex; flex-direction: column; will-change: transform; }
+.pl-col > span { display: block; height: .8em; line-height: .8em; }
+.pl-side { display: grid; gap: 22px; justify-items: end; padding-bottom: clamp(10px, 1.6vw, 24px); }
+.pl-words { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; text-align: right; }
+.pl-words li { font-family: var(--f-display); font-weight: 650; letter-spacing: -.03em; font-size: clamp(1.4rem, 2.6vw, 2.5rem); line-height: 1.05; color: rgba(246, 243, 236, .18); transition: color .45s ease; }
+.pl-words li.on { color: var(--paper); }
+.pl-words li.on:last-child { color: var(--mint); }
+.pl-bar { width: clamp(180px, 22vw, 320px); height: 1px; background: rgba(246, 243, 236, .15); }
+.pl-bar i { display: block; height: 100%; background: var(--mint); transform-origin: left; transform: scaleX(0); }
+@media (max-width: 760px) { .pl-bottom { flex-direction: column; align-items: flex-start; } .pl-side { justify-items: start; } .pl-words { text-align: left; } }
 
 .curtain {
   display: block; position: fixed; inset: 0; z-index: 990; background: var(--indigo); pointer-events: none;
@@ -1360,7 +1368,6 @@ a.mini-case svg { display: inline-block; width: 16px; height: 16px; vertical-ali
 .footer-mega { font-weight: 800; letter-spacing: -.04em; font-size: clamp(3.4rem, 14.6vw, 15rem); line-height: .76; }
 .menu__nav a { font-weight: 700; letter-spacing: -.034em; font-size: clamp(2.5rem, 10vw, 5rem); line-height: .98; }
 .feel span { font-weight: 700; letter-spacing: -.04em; font-size: clamp(1.6rem, 3.2vw, 3.1rem); padding: .1em .48em .16em; }
-.preloader__count { font-weight: 800; letter-spacing: -.07em; }
 .gauge__val, .calc__big, .field-range output { font-weight: 700; }
 .calc__big { letter-spacing: -.04em; }
 .mega__title { font-family: var(--f-display); font-weight: 650; letter-spacing: -.018em; font-size: 15.5px; }

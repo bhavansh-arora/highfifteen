@@ -53,17 +53,28 @@
     store.del('hf-nav');
     if (h.classList.contains('is-loading') && g) {
       store.set('hf-seen', '1');
-      var counter = $('[data-count-target]'), obj = { v: 0 };
+      // Odometer: the units column rolls continuously (0→9→0→5); tens flips 0→1 as units pass 9.
+      var units = $('.pl-units'), tens = $('.pl-tens'), count = $('.pl-count'), words = $$('.pl-words li'), obj = { v: 0 };
+      var roll = function () {
+        var v = obj.v;
+        units.style.transform = 'translateY(' + (-v * .8) + 'em)';
+        tens.style.transform = 'translateY(' + (-Math.min(1, Math.max(0, v - 9)) * .8) + 'em)';
+        words.forEach(function (li, k) { li.classList.toggle('on', v >= [3, 8, 14.5][k]); });
+      };
       var tl = g.timeline({ onComplete: finishIntro });
-      tl.to('.preloader__logo', { opacity: 1, y: 0, duration: .4, ease: 'power3.out' }, 0)
-        .to('.preloader__bar i', { scaleX: 1, duration: .9, ease: 'power2.inOut' }, 0.05)
-        .to(obj, { v: 15, duration: .9, ease: 'power2.inOut', onUpdate: function () { counter.textContent = String(Math.round(obj.v)).padStart(2, '0'); } }, 0.1)
-        .to('.preloader__inner', { y: -40, opacity: 0, duration: .35, ease: 'power3.in' }, '+=.05')
-        // Explicit y:0 so GSAP never mixes a pixel offset (read from the CSS) with yPercent.
-        .fromTo('.preloader__panel', { y: 0, yPercent: 100 }, { y: 0, yPercent: 0, duration: .45, ease: 'power3.inOut' }, '-=.15')
-        .set('.preloader', { display: 'none' })
-        .fromTo('.preloader__panel', { y: 0, yPercent: 0 }, { y: 0, yPercent: -100, immediateRender: false, duration: .55, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 120); } })
-        .set('.preloader__panel', { display: 'none' });
+      // Keep the intro on screen until its own timeline ends (finishIntro removes .is-loading early).
+      tl.set('.preloader', { display: 'block' }, 0)
+        .from('.pl-top > *', { y: 20, opacity: 0, duration: .6, ease: 'power3.out', stagger: .08 }, 0)
+        .from(count, { yPercent: 40, opacity: 0, duration: .7, ease: 'expo.out' }, .05)
+        .from('.pl-side', { y: 20, opacity: 0, duration: .6, ease: 'power3.out' }, .15)
+        .to(obj, { v: 15, duration: 1.45, ease: 'power3.inOut', onUpdate: roll }, .2)
+        .to('.pl-bar i', { scaleX: 1, duration: 1.45, ease: 'power3.inOut' }, .2)
+        .add(function () { count.classList.add('is-done'); }, 1.62)
+        // Out: UI drops away, then the six shutters lift in a staggered wave.
+        .to('.pl-ui > *', { y: -30, opacity: 0, duration: .38, ease: 'power3.in', stagger: .05 }, 1.9)
+        .to('.pl-cols i', { yPercent: -100, duration: .9, ease: 'power4.inOut', stagger: { each: .06, from: 'start' },
+          onStart: function () { setTimeout(finishIntro, 260); } }, 2.12)
+        .set('.preloader', { display: 'none' });
     } else if (h.classList.contains('is-entering') && g) {
       g.timeline({ onComplete: function () { g.set('.curtain', { clearProps: 'all' }); } })
         .to('.curtain__logo', { opacity: 0, duration: .25 }, .05)
