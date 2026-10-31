@@ -312,12 +312,29 @@
       stopped = true; root.classList.add('is-scroll');
       w.gsap.registerPlugin(w.ScrollTrigger);
       var n = tabs.length;
+      // Pin the whole block (heading + options) when it fits on screen so no empty band shows above;
+      // otherwise pin just the options, just below the header.
+      var block = root.closest('.container') || root, headerH = ($('.nav') || { offsetHeight: 68 }).offsetHeight + 14;
+      var fits = function () { return block.offsetHeight <= w.innerHeight - headerH - 24; };
+      var pinEl = fits() ? block : root, ph = null;
+      if (pinEl === root && block !== root) {
+        // Compact title + live counter that fades in above the options while they're pinned
+        var eb = $('.eyebrow', block), h2 = $('h2', block);
+        ph = d.createElement('div'); ph.className = 'pw-pinhead'; ph.setAttribute('aria-hidden', 'true');
+        ph.innerHTML = '<span class="pw-pinhead__t">' + (h2 ? h2.textContent.replace(/\s+/g, ' ').trim() : '') + '</span><span class="pw-pinhead__n"><b>01</b> / ' + String(n).padStart(2, '0') + '</span>';
+        root.appendChild(ph);
+      }
       stepST = w.ScrollTrigger.create({
-        trigger: root, start: 'center 54%', end: function () { return '+=' + Math.round(w.innerHeight * .55 * (n - 1) + w.innerHeight * .25); },
-        pin: true, pinSpacing: true, anticipatePin: 1,
+        trigger: pinEl, toggleClass: { targets: root, className: 'is-pinned' },
+        start: function () {
+          if (pinEl === root) return 'center ' + Math.round(w.innerHeight / 2 + 34) + 'px';   // header hides while scrolling down
+          var free = w.innerHeight - headerH; return 'top ' + Math.round(headerH + Math.max(12, (free - pinEl.offsetHeight) / 2)) + 'px';
+        },
+        end: function () { return '+=' + Math.round(w.innerHeight * .55 * (n - 1) + w.innerHeight * .25); },
+        pin: pinEl, pinSpacing: true, anticipatePin: 1, invalidateOnRefresh: true,
         onUpdate: function (self) {
           var x = self.progress * n, idx = Math.min(n - 1, Math.floor(x)), cur = current();
-          if (tabs[idx] !== cur) select(tabs[idx]);
+          if (tabs[idx] !== cur) { select(tabs[idx]); if (ph) $('b', ph).textContent = String(idx + 1).padStart(2, '0'); }
           var bar = $('.pathway-tab__bar', tabs[idx]); if (bar) bar.style.setProperty('--p', Math.min(1, x - idx));
         }
       });
