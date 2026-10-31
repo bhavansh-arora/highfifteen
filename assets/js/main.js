@@ -274,10 +274,51 @@
       root.dispatchEvent(new CustomEvent('hf:tab', { detail: { panel: d.getElementById(tab.getAttribute('aria-controls')) } }));
       if (w.ScrollTrigger) setTimeout(function () { w.ScrollTrigger.refresh(); }, 50);
     }
+    // Phones/tablets (panels with photos): all options stacked, a pinned photo above them
+    // that switches as each option's text scrolls past.
+    var stackMode = false;
+    if (root.classList.contains('pathways--rich') && w.matchMedia('(max-width: 1079px)').matches) {
+      stackMode = true; root.classList.add('is-stack');
+      var panels = tabs.map(function (t) { return d.getElementById(t.getAttribute('aria-controls')); });
+      var sticky = d.createElement('div'); sticky.className = 'pw-sticky'; sticky.setAttribute('aria-hidden', 'true');
+      var frame = '<div class="pw-sticky__frame">', dots = '';
+      panels.forEach(function (p, k) {
+        var im = $('.pathway-panel__media img', p);
+        if (im) { var c = im.cloneNode(); c.removeAttribute('loading'); c.alt = ''; if (k === 0) c.className = 'on'; frame += c.outerHTML; }
+        dots += '<i' + (k === 0 ? ' class="on"' : '') + '></i>';
+      });
+      frame += '<div class="pw-sticky__meta"><span class="pw-sticky__cap"></span><span class="pw-sticky__n"></span></div></div><div class="pw-sticky__dots">' + dots + '</div>';
+      sticky.innerHTML = frame;
+      panels[0].parentNode.insertBefore(sticky, panels[0]);
+      var imgs = $$('.pw-sticky__frame img', sticky), dotEls = $$('.pw-sticky__dots i', sticky);
+      var cap = $('.pw-sticky__cap', sticky), num = $('.pw-sticky__n', sticky), active = -1;
+      var setActive = function (k) {
+        if (k === active) return; active = k;
+        imgs.forEach(function (im, j) { im.classList.toggle('on', j === k); });
+        dotEls.forEach(function (dd, j) { dd.classList.toggle('on', j <= k); });
+        var fc = $('.pathway-panel__media figcaption', panels[k]);
+        cap.textContent = fc ? fc.textContent : '';
+        num.textContent = String(k + 1).padStart(2, '0') + ' / ' + String(panels.length).padStart(2, '0');
+        tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === k ? 'true' : 'false'); });
+      };
+      panels.forEach(function (p) { p.hidden = false; });
+      setActive(0);
+      // The option whose text crosses the band just under the pinned photo is the active one
+      var pick = function () {
+        var line = (stickyBottom() + w.innerHeight) / 2, best = 0;
+        panels.forEach(function (p, k) { if (p.getBoundingClientRect().top < line) best = k; });
+        setActive(best);
+      };
+      var stickyBottom = function () { return sticky.getBoundingClientRect().bottom; };
+      w.addEventListener('scroll', function () { requestAnimationFrame(pick); }, { passive: true });
+      w.addEventListener('resize', function () {
+        if (w.matchMedia('(min-width: 1080px)').matches && root.classList.contains('is-stack')) location.reload();
+      });
+    }
     // Optional auto-play (data-autoplay="ms"): cycles while on screen, pauses on hover,
     // stops for good once the visitor picks a tab themselves.
-    var auto = +root.getAttribute('data-autoplay') || 0, raf = 0, last = 0, elapsed = 0, inView = false, hovering = false, stopped = reduce || !auto;
-    if (auto || root.hasAttribute('data-scrollsteps')) tabs.forEach(function (t) { var b = d.createElement('span'); b.className = 'pathway-tab__bar'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i></i>'; t.appendChild(b); });
+    var auto = +root.getAttribute('data-autoplay') || 0, raf = 0, last = 0, elapsed = 0, inView = false, hovering = false, stopped = reduce || !auto || stackMode;
+    if (auto || root.hasAttribute('data-scrollsteps')) tabs.forEach(function (t) { t.classList.add('has-bar'); var b = d.createElement('span'); b.className = 'pathway-tab__bar'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i></i>'; t.appendChild(b); });
     function current() { return tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0]; }
     function frame(ts) {
       if (stopped) return;
