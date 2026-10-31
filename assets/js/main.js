@@ -66,13 +66,15 @@
           } });
         }
       };
+      var small = w.innerWidth < 760;
       var tl = g.timeline({ onComplete: finishIntro });
+      if (small) tl.timeScale(1.2);   // a slightly quicker cut on phones
       // Keep the intro on screen until its own timeline ends (finishIntro removes .is-loading early).
       tl.set('.preloader', { display: 'block' }, 0)
-        .from('.pl-logo, .pl-label, .pl-foot', { opacity: 0, y: 12, duration: .6, ease: 'power3.out', stagger: .05 }, 0)
-        .from(num, { yPercent: 18, opacity: 0, filter: 'blur(14px)', duration: .9, ease: 'expo.out', clearProps: 'filter' }, .05)
+        .fromTo('.pl-logo, .pl-label, .pl-foot', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .6, ease: 'power3.out', stagger: .05 }, 0)
+        .fromTo(num, small ? { yPercent: 18, opacity: 0 } : { yPercent: 18, opacity: 0, filter: 'blur(14px)' }, small ? { yPercent: 0, opacity: 1, duration: .8, ease: 'expo.out' } : { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: .9, ease: 'expo.out', clearProps: 'filter' }, .05)
         .to('.pl-glow', { opacity: 1, duration: 1.6, ease: 'power2.inOut' }, .2)
-        .from('.pl-word', { opacity: 0, duration: .5 }, .2)
+        .fromTo('.pl-word', { opacity: 0 }, { opacity: 1, duration: .5 }, .2)
         .to(obj, { v: 15, duration: 1.4, ease: 'power2.inOut', onUpdate: tick }, .2)
         .to('.pl-line i', { scaleX: 1, duration: 1.4, ease: 'power2.inOut' }, .2)
         .add(function () { num.classList.add('is-done'); }, 1.6)

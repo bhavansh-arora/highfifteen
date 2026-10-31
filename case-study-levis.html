@@ -35,12 +35,12 @@
       var h = d.documentElement; h.classList.add('js');
       try {
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        /* Intro + page curtain only on desktop: on phones they just feel like lag. */
         var desk = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)').matches;
         if (!reduce) h.classList.add('motion-ok');
         if (desk) h.classList.add('is-desktop');
         var s = window.sessionStorage;
-        if (!reduce && desk && !s.getItem('hf-seen')) h.classList.add('is-loading');
+        /* The welcome intro plays on every device; the page-to-page curtain stays desktop-only. */
+        if (!reduce && !s.getItem('hf-seen')) h.classList.add('is-loading');
         else if (!reduce && desk && s.getItem('hf-nav')) h.classList.add('is-entering');
       } catch (e) {}
       /* Safety net: never leave content hidden if a script fails to load. */

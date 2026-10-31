@@ -1792,3 +1792,15 @@ figure { margin: 0; }
   .case-card:not(.case-card--intro) .case-card__img { overflow: hidden; flex: none; }
   .case-card:not(.case-card--intro) .case-card__img img { position: absolute; inset: 0; }
 }
+
+/* Welcome intro on phones: bigger number, labels stacked so nothing collides */
+@media (max-width: 759px) {
+  .preloader { --plF: clamp(6.5rem, 34vw, 9rem); }
+  .pl-label { display: none; }
+  .pl-foot { right: var(--gutter); text-align: center; font-size: 10px; letter-spacing: .14em; }
+  .pl-foot--r { display: none; }
+  .pl-word span { font-size: clamp(1.6rem, 7.5vw, 2.1rem); }
+  .pl-glow { width: 160vw; }
+}
+/* Intro elements start hidden so they only ever fade in (no flash before the animation starts) */
+.is-loading .pl-logo, .is-loading .pl-label, .is-loading .pl-foot, .is-loading .pl-count, .is-loading .pl-word { opacity: 0; }
