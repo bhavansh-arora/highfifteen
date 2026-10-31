@@ -70,7 +70,8 @@
       // Keep the intro on screen until its own timeline ends (finishIntro removes .is-loading early).
       tl.set('.preloader', { display: 'block' }, 0)
         .from('.pl-logo, .pl-label, .pl-foot', { opacity: 0, y: 12, duration: .6, ease: 'power3.out', stagger: .05 }, 0)
-        .from(num, { yPercent: 25, opacity: 0, duration: .7, ease: 'expo.out' }, .05)
+        .from(num, { yPercent: 18, opacity: 0, filter: 'blur(14px)', duration: .9, ease: 'expo.out', clearProps: 'filter' }, .05)
+        .to('.pl-glow', { opacity: 1, duration: 1.6, ease: 'power2.inOut' }, .2)
         .from('.pl-word', { opacity: 0, duration: .5 }, .2)
         .to(obj, { v: 15, duration: 1.4, ease: 'power2.inOut', onUpdate: tick }, .2)
         .to('.pl-line i', { scaleX: 1, duration: 1.4, ease: 'power2.inOut' }, .2)
