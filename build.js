@@ -194,7 +194,11 @@ function writePage(file, meta, body) {
   hdr = hdr.replace(/\{\{cur:(\w[\w-]*)\}\}/g, (_, k) => (k === nav ? ' aria-current="page"' : ''));
   const svcPages = ['services', 'culture', 'coaching', 'learning', 'speaking', 'hr-hub'];
   hdr = hdr.replace('{{svc-current}}', svcPages.includes(nav) ? ' is-current' : '');
-  const out = render(head, vars) + render(hdr, vars) + render(journalTags(body), vars) + render(footer, vars);
+  let main = render(journalTags(body), vars);
+  // Mask-wipe reveals on content images site-wide (hero images animate with the header instead)
+  main = main.replace(/<div class="(media-card(?: media-card--\w+)?|post__img)"(?![^>]*data-(?:clip|wipe))/g, (m, cls, off, str) =>
+    /page-hero__media|article-cover/.test(str.slice(Math.max(0, off - 160), off)) ? m : `${m} data-wipe`);
+  const out = render(head, vars) + render(hdr, vars) + main + render(footer, vars);
   const leftover = out.match(/\{\{[^}]+\}\}|<x-[a-z]+/);
   if (leftover) throw new Error(`Unrendered token in ${file}: ${leftover[0]}`);
   fs.writeFileSync(path.join(ROOT, file), out);

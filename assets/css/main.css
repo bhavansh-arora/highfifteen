@@ -1713,3 +1713,32 @@ html:not(.motion-ok) .footer-mega, .footer-mega:not(:has(.ml)) { color: var(--mi
 .pathways--rich .pathway-panel .dots { gap: 8px; }
 .pathways--rich .pathway-panel .dots li { font-size: .98rem; }
 .pathways--rich .pathway-tab { padding-block: clamp(14px, 1.6vw, 20px); }
+
+/* ---------- Italic words: give swashes room inside their reveal masks (the J in "Journal") ---------- */
+.it .sw { padding: .14em .14em .26em .2em; margin: -.14em -.14em -.26em -.2em; }
+
+/* ---------- Sticky case-study images never taller than the screen ---------- */
+@media (min-width: 1000px) {
+  .case-block__media .media-card { aspect-ratio: auto; height: min(calc(100vh - var(--header-h) - 100px), 760px); }
+  .case-block__media .media-card img { height: 100%; }
+}
+
+/* ---------- Page-to-page transition: navy cover, destination name, mint line ---------- */
+.curtain { background: var(--ink); color: var(--paper); }
+.curtain__logo { left: var(--gutter); top: clamp(26px, 3.2vw, 44px); width: clamp(92px, 7.5vw, 120px); transform: none; }
+.curtain__mid { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-62%); display: grid; justify-items: center; gap: clamp(16px, 2.2vh, 24px); padding: 0 var(--gutter); }
+.curtain__label { display: block; overflow: hidden; padding: .05em .1em .14em; }
+.curtain__label span { display: inline-block; font-family: var(--f-display); font-weight: 760; letter-spacing: -.03em; line-height: 1; font-size: clamp(2.8rem, 7vw, 6.4rem); transform: translateY(110%); }
+.curtain__kicker { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--mint); opacity: 0; }
+.curtain__line { width: min(560px, 70vw); height: 1px; background: rgba(246, 243, 236, .14); }
+.curtain__line i { display: block; height: 100%; background: var(--mint); transform-origin: left; transform: scaleX(0); }
+.is-entering .curtain__label span { transform: none; }
+.is-entering .curtain__kicker { opacity: 1; }
+.is-entering .curtain__line i { transform: scaleX(1); }
+
+/* ---------- Inner page headers share the homepage graphics ---------- */
+.page-hero .grid-lines { display: none; }
+.page-hero__media { perspective: 1200px; }
+.pathways.is-scroll .pathway-tab[aria-selected="true"] .pathway-tab__bar { opacity: 1; }
+.page-hero__media .media-card { overflow: visible; }
+.page-hero__media .media-card::before { content: ''; position: absolute; inset: 0; border: 1.5px solid rgba(131, 239, 192, .55); border-radius: var(--radius); transform: translate(-16px, 16px); pointer-events: none; z-index: -1; }

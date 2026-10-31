@@ -16,7 +16,7 @@
   /* ---------- Smooth scroll ---------- */
   var lenis = null;
   if (!reduce && w.Lenis && !('ontouchstart' in w && w.innerWidth < 1024)) {
-    lenis = new w.Lenis({ duration: 1.15, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true });
+    lenis = new w.Lenis({ lerp: .14, wheelMultiplier: 1, smoothWheel: true });  // responsive, no trailing 'drag'
     HF.lenis = lenis;
     if (w.gsap && w.ScrollTrigger) {
       lenis.on('scroll', w.ScrollTrigger.update);
@@ -82,9 +82,14 @@
         .to('.pl-half--bot', { yPercent: 100, duration: 1, ease: 'power4.inOut', onStart: function () { setTimeout(finishIntro, 120); } }, 1.9)
         .set('.preloader', { display: 'none' });
     } else if (h.classList.contains('is-entering') && g) {
-      g.timeline({ onComplete: function () { g.set('.curtain', { clearProps: 'all' }); } })
-        .to('.curtain__logo', { opacity: 0, duration: .25 }, .05)
-        .fromTo('.curtain', { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .6, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 150); } }, .02);
+      var lbl = $('[data-curtain-label]'); if (lbl) lbl.textContent = store.get('hf-nav-label') || '';
+      // .is-active keeps the cover visible after finishIntro removes .is-entering mid-lift
+      var curEl = $('.curtain'); curEl.classList.add('is-active');
+      g.timeline({ onComplete: function () { curEl.classList.remove('is-active'); g.set('.curtain, .curtain__label span, .curtain__line i, .curtain__kicker, .curtain__logo', { clearProps: 'all' }); } })
+        .to('.curtain__label span', { yPercent: -110, duration: .55, ease: 'power3.in' }, .35)
+        .to('.curtain__kicker, .curtain__logo', { opacity: 0, duration: .3 }, .35)
+        .to('.curtain__line i', { scaleX: 0, transformOrigin: 'right center', duration: .5, ease: 'power3.in' }, .35)
+        .fromTo('.curtain', { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .95, ease: 'power4.inOut', onStart: function () { setTimeout(finishIntro, 300); } }, .7);
     } else {
       store.set('hf-seen', '1');
       finishIntro();
@@ -93,6 +98,18 @@
   // Start as soon as the page is parsed: never wait for every image to download.
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', runIntro); else runIntro();
   setTimeout(finishIntro, 2500);
+
+  /* Destination names shown on the page transition */
+  function pageName(path) {
+    var f = (path.split('/').pop() || 'index.html').replace('.html', '');
+    var map = { '': 'Home', index: 'Home', about: 'About', services: 'Services', culture: 'Culture', coaching: 'Executive coaching',
+      learning: 'Leadership learning', speaking: 'Speaking', 'hr-hub': 'HR Hub', 'case-studies': 'Case studies', journal: 'The Journal',
+      press: 'Press & media', contact: 'Work with us', '404': 'High Fifteen' };
+    if (map[f] !== undefined) return map[f];
+    if (f.indexOf('journal-') === 0) return 'The Journal';
+    if (f.indexOf('case-study-') === 0) return 'Case study';
+    return 'High Fifteen';
+  }
 
   /* Curtain on internal navigation */
   d.addEventListener('click', function (e) {
@@ -112,12 +129,17 @@
     closeMenu();
     var g = w.gsap;
     if (!g) { location.href = url.href; return; }
+    var label = pageName(url.pathname); store.set('hf-nav-label', label);
     var cur = $('.curtain'); cur.classList.add('is-active');
+    var lblEl = $('[data-curtain-label]'); if (lblEl) lblEl.textContent = label;
     g.set(cur, { y: w.innerHeight * .14, yPercent: 100 });
+    g.set('.curtain__label span', { yPercent: 110 }); g.set('.curtain__line i', { scaleX: 0, transformOrigin: 'left center' }); g.set('.curtain__kicker, .curtain__logo', { opacity: 0 });
     g.timeline()
-      .to(cur, { y: 0, yPercent: 0, duration: .5, ease: 'power3.inOut' })
-      .to('.curtain__logo', { opacity: 1, duration: .25 }, '-=.2')
-      .add(function () { location.href = url.href; });
+      .to(cur, { y: 0, yPercent: 0, duration: .7, ease: 'power4.inOut' })
+      .to('.curtain__logo, .curtain__kicker', { opacity: 1, duration: .35 }, .45)
+      .to('.curtain__label span', { yPercent: 0, duration: .6, ease: 'expo.out' }, .5)
+      .to('.curtain__line i', { scaleX: 1, duration: .55, ease: 'power3.inOut' }, .55)
+      .add(function () { location.href = url.href; }, 1.05);
   });
   w.addEventListener('pageshow', function (e) {
     if (e.persisted) { h.classList.remove('is-entering'); if (w.gsap) w.gsap.set('.curtain', { clearProps: 'all' }); }
@@ -255,7 +277,7 @@
     // Optional auto-play (data-autoplay="ms"): cycles while on screen, pauses on hover,
     // stops for good once the visitor picks a tab themselves.
     var auto = +root.getAttribute('data-autoplay') || 0, raf = 0, last = 0, elapsed = 0, inView = false, hovering = false, stopped = reduce || !auto;
-    if (auto) tabs.forEach(function (t) { var b = d.createElement('span'); b.className = 'pathway-tab__bar'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i></i>'; t.appendChild(b); });
+    if (auto || root.hasAttribute('data-scrollsteps')) tabs.forEach(function (t) { var b = d.createElement('span'); b.className = 'pathway-tab__bar'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i></i>'; t.appendChild(b); });
     function current() { return tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0]; }
     function frame(ts) {
       if (stopped) return;
@@ -268,6 +290,26 @@
       raf = requestAnimationFrame(frame);
     }
     function stopAuto() { if (stopped) return; stopped = true; cancelAnimationFrame(raf); root.classList.remove('is-auto'); }
+    // Scroll-driven (data-scrollsteps, desktop): the block pins and each tab takes a slice of the scroll.
+    var stepST = null;
+    if (root.hasAttribute('data-scrollsteps') && !reduce && w.gsap && w.ScrollTrigger && w.matchMedia('(min-width: 1080px)').matches) {
+      stopped = true; root.classList.add('is-scroll');
+      w.gsap.registerPlugin(w.ScrollTrigger);
+      var n = tabs.length;
+      stepST = w.ScrollTrigger.create({
+        trigger: root, start: 'center 54%', end: function () { return '+=' + Math.round(w.innerHeight * .55 * (n - 1) + w.innerHeight * .25); },
+        pin: true, pinSpacing: true, anticipatePin: 1,
+        onUpdate: function (self) {
+          var x = self.progress * n, idx = Math.min(n - 1, Math.floor(x)), cur = current();
+          if (tabs[idx] !== cur) select(tabs[idx]);
+          var bar = $('.pathway-tab__bar', tabs[idx]); if (bar) bar.style.setProperty('--p', Math.min(1, x - idx));
+        }
+      });
+      root._stepTo = function (i) {
+        var y = stepST.start + (stepST.end - stepST.start) * ((i + .5) / n);
+        if (HF.lenis) HF.lenis.scrollTo(y, { duration: .9 }); else w.scrollTo({ top: y, behavior: 'smooth' });
+      };
+    }
     if (!stopped) {
       root.classList.add('is-auto');
       root.addEventListener('mouseenter', function () { hovering = true; });
@@ -277,7 +319,7 @@
       raf = requestAnimationFrame(frame);
     }
     tabs.forEach(function (t, i) {
-      t.addEventListener('click', function (e) { if (e.isTrusted) stopAuto(); select(t); });
+      t.addEventListener('click', function (e) { if (e.isTrusted) stopAuto(); if (root._stepTo && e.isTrusted) { root._stepTo(i); return; } select(t); });
       t.addEventListener('keydown', function (e) {
         var k = e.key, n = null;
         if (k === 'ArrowRight' || k === 'ArrowDown') n = tabs[(i + 1) % tabs.length];
@@ -643,6 +685,16 @@
       }
     });
   })();
+
+  /* ---------- Homepage graphics on every inner page header ---------- */
+  $$('.page-hero').forEach(function (hero) {
+    if (!$('[data-dotfield]', hero)) { var c = d.createElement('canvas'); c.className = 'dotfield'; c.setAttribute('data-dotfield', ''); c.setAttribute('aria-hidden', 'true'); hero.insertBefore(c, hero.firstChild); }
+    var media = $('.page-hero__media', hero);
+    if (media && !$('.rings', media)) {
+      media.insertAdjacentHTML('afterbegin', '<svg class="rings" viewBox="0 0 600 600" aria-hidden="true"><circle class="r1" cx="300" cy="300" r="292"/><circle class="r2" cx="300" cy="300" r="240"/><circle class="r3" cx="300" cy="300" r="188"/><circle class="r4" cx="300" cy="300" r="292" pathLength="100"/></svg>');
+      media.setAttribute('data-tilt', '');
+    }
+  });
 
   /* ---------- Hero dot field ----------
      A grid of dots that breathes slowly and swells towards the cursor.

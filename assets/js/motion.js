@@ -140,7 +140,7 @@
     sec.classList.add('has-pin');   // section becomes exactly one screen tall, so nothing is cut off while pinned
     var dist = function () { return Math.max(0, track.scrollWidth - w.innerWidth + 16); };
     var tween = g.to(track, { x: function () { return -dist(); }, ease: 'none',
-      scrollTrigger: { trigger: sec, start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: .8, invalidateOnRefresh: true, anticipatePin: 1 } });
+      scrollTrigger: { trigger: sec, start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: .35, invalidateOnRefresh: true, anticipatePin: 1 } });
     HF.railStep = function (dir) {
       var st = tween.scrollTrigger, card = track.children[0].getBoundingClientRect().width + 24;
       var target = st.start + (st.end - st.start) * Math.min(1, Math.max(0, st.progress + dir * card / dist()));
@@ -224,21 +224,25 @@
     if (img) tl.to(img, { scale: 1, duration: 1.8, ease: 'expo.out' }, .1);
   });
 
-  /* ---------- Portrait: gentle 3D tilt towards the cursor ---------- */
+  /* ---------- Header images: gentle 3D tilt towards the cursor (home + every inner page) ---------- */
   mm.add('(hover: hover) and (pointer: fine) and (min-width: 1080px)', function () {
-    var box = $('[data-tilt]'); if (!box) return;
-    var card = $('.portrait-card', box), frame = $('.portrait-card__frame', box), rings = $('.rings', box);
-    var hero = box.closest('section');
-    var rx = g.quickTo(card, 'rotationX', { duration: .8, ease: 'power3' }), ry = g.quickTo(card, 'rotationY', { duration: .8, ease: 'power3' });
-    var fx = g.quickTo(frame, 'x', { duration: 1, ease: 'power3' }), fy = g.quickTo(frame, 'y', { duration: 1, ease: 'power3' });
-    var gx = g.quickTo(rings, 'x', { duration: 1.4, ease: 'power3' }), gy = g.quickTo(rings, 'y', { duration: 1.4, ease: 'power3' });
-    var move = function (e) {
-      var r = box.getBoundingClientRect(), px = (e.clientX - (r.left + r.width / 2)) / innerWidth, py = (e.clientY - (r.top + r.height / 2)) / innerHeight;
-      ry(px * 14); rx(-py * 12); fx(-18 - px * 22); fy(18 - py * 22); gx(-px * 30); gy(-py * 30);
-    };
-    hero.addEventListener('mousemove', move);
-    hero.addEventListener('mouseleave', function () { rx(0); ry(0); fx(-18); fy(18); gx(0); gy(0); });
-    return function () { hero.removeEventListener('mousemove', move); };
+    var offs = [];
+    $$('[data-tilt]').forEach(function (box) {
+      var card = $('.portrait-card', box) || Array.prototype.filter.call(box.children, function (c) { return !c.classList.contains('rings') && !c.classList.contains('portrait-card__frame'); })[0];
+      if (!card) return;
+      var frame = $('.portrait-card__frame', box), rings = $('.rings', box), hero = box.closest('section');
+      var rx = g.quickTo(card, 'rotationX', { duration: .8, ease: 'power3' }), ry = g.quickTo(card, 'rotationY', { duration: .8, ease: 'power3' });
+      var fx = frame && g.quickTo(frame, 'x', { duration: 1, ease: 'power3' }), fy = frame && g.quickTo(frame, 'y', { duration: 1, ease: 'power3' });
+      var gx = rings && g.quickTo(rings, 'x', { duration: 1.4, ease: 'power3' }), gy = rings && g.quickTo(rings, 'y', { duration: 1.4, ease: 'power3' });
+      var move = function (e) {
+        var r = box.getBoundingClientRect(), px = (e.clientX - (r.left + r.width / 2)) / innerWidth, py = (e.clientY - (r.top + r.height / 2)) / innerHeight;
+        ry(px * 14); rx(-py * 12); if (fx) { fx(-18 - px * 22); fy(18 - py * 22); } if (gx) { gx(-px * 30); gy(-py * 30); }
+      };
+      var leave = function () { rx(0); ry(0); if (fx) { fx(-18); fy(18); } if (gx) { gx(0); gy(0); } };
+      hero.addEventListener('mousemove', move); hero.addEventListener('mouseleave', leave);
+      offs.push(function () { hero.removeEventListener('mousemove', move); hero.removeEventListener('mouseleave', leave); });
+    });
+    return function () { offs.forEach(function (f) { f(); }); };
   });
 
   /* ---------- Pathway panels: photo wipe, headline rise, list stagger ---------- */
