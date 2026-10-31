@@ -53,27 +53,32 @@
     store.del('hf-nav');
     if (h.classList.contains('is-loading') && g) {
       store.set('hf-seen', '1');
-      // Odometer: the units column rolls continuously (0→9→0→5); tens flips 0→1 as units pass 9.
-      var units = $('.pl-units'), tens = $('.pl-tens'), count = $('.pl-count'), words = $$('.pl-words li'), obj = { v: 0 };
-      var roll = function () {
-        var v = obj.v;
-        units.style.transform = 'translateY(' + (-v * .8) + 'em)';
-        tens.style.transform = 'translateY(' + (-Math.min(1, Math.max(0, v - 9)) * .8) + 'em)';
-        words.forEach(function (li, k) { li.classList.toggle('on', v >= [3, 8, 14.5][k]); });
+      var num = $('[data-pl-num]'), word = $('[data-pl-word]'), obj = { v: 0 }, shown = -1;
+      var WORDS = ['Clarity', 'Confidence', 'Performance'];
+      var tick = function () {
+        var n = Math.round(obj.v);
+        if (n !== shown) { shown = n; num.textContent = String(n).padStart(2, '0'); }
+        var k = obj.v < 5 ? 0 : obj.v < 10.5 ? 1 : 2;
+        if (word.textContent !== WORDS[k]) {
+          g.fromTo(word, { yPercent: 0, opacity: 1 }, { yPercent: -60, opacity: 0, duration: .16, ease: 'power2.in', onComplete: function () {
+            word.textContent = WORDS[k];
+            g.fromTo(word, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .32, ease: 'power3.out' });
+          } });
+        }
       };
       var tl = g.timeline({ onComplete: finishIntro });
       // Keep the intro on screen until its own timeline ends (finishIntro removes .is-loading early).
       tl.set('.preloader', { display: 'block' }, 0)
-        .from('.pl-top > *', { y: 20, opacity: 0, duration: .6, ease: 'power3.out', stagger: .08 }, 0)
-        .from(count, { yPercent: 40, opacity: 0, duration: .7, ease: 'expo.out' }, .05)
-        .from('.pl-side', { y: 20, opacity: 0, duration: .6, ease: 'power3.out' }, .15)
-        .to(obj, { v: 15, duration: 1.45, ease: 'power3.inOut', onUpdate: roll }, .2)
-        .to('.pl-bar i', { scaleX: 1, duration: 1.45, ease: 'power3.inOut' }, .2)
-        .add(function () { count.classList.add('is-done'); }, 1.62)
-        // Out: UI drops away, then the six shutters lift in a staggered wave.
-        .to('.pl-ui > *', { y: -30, opacity: 0, duration: .38, ease: 'power3.in', stagger: .05 }, 1.9)
-        .to('.pl-cols i', { yPercent: -100, duration: .9, ease: 'power4.inOut', stagger: { each: .06, from: 'start' },
-          onStart: function () { setTimeout(finishIntro, 260); } }, 2.12)
+        .from('.pl-logo, .pl-label, .pl-foot', { opacity: 0, y: 12, duration: .6, ease: 'power3.out', stagger: .05 }, 0)
+        .from(num, { yPercent: 25, opacity: 0, duration: .7, ease: 'expo.out' }, .05)
+        .from('.pl-word', { opacity: 0, duration: .5 }, .2)
+        .to(obj, { v: 15, duration: 1.4, ease: 'power2.inOut', onUpdate: tick }, .2)
+        .to('.pl-line i', { scaleX: 1, duration: 1.4, ease: 'power2.inOut' }, .2)
+        .add(function () { num.classList.add('is-done'); }, 1.6)
+        // Split open along the line; the page starts animating in as it opens.
+        .to('.pl-line', { opacity: 0, duration: .3 }, 1.95)
+        .to('.pl-half--top', { yPercent: -100, duration: 1, ease: 'power4.inOut' }, 1.9)
+        .to('.pl-half--bot', { yPercent: 100, duration: 1, ease: 'power4.inOut', onStart: function () { setTimeout(finishIntro, 120); } }, 1.9)
         .set('.preloader', { display: 'none' });
     } else if (h.classList.contains('is-entering') && g) {
       g.timeline({ onComplete: function () { g.set('.curtain', { clearProps: 'all' }); } })

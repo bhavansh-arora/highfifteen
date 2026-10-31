@@ -450,29 +450,29 @@ h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: inherit; }
 
 /* ---------- Preloader & page curtain ---------- */
 .preloader, .curtain { display: none; }
-/* Intro (desktop, first visit): rolling 00→15 counter, then shutters lift away */
-/* Always fixed: the intro stays on screen briefly after .is-loading is removed */
+/* Always fixed on top: the intro stays on screen briefly after .is-loading is removed */
 .preloader { position: fixed; inset: 0; z-index: 1000; color: var(--paper); }
 .is-loading .preloader { display: block; }
-.pl-cols { position: absolute; inset: 0; display: flex; }
-.pl-cols i { flex: 1; height: 100%; margin-right: -1px; background: var(--ink); box-shadow: inset 0 -2px 0 var(--mint), inset -1px 0 0 rgba(246, 243, 236, .06); }
-.pl-ui { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(26px, 3.2vw, 46px) var(--gutter); }
-.pl-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-.pl-logo { width: clamp(96px, 8vw, 128px); height: auto; }
-.pl-label { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: rgba(246, 243, 236, .55); }
-.pl-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
-.pl-count { display: flex; font-family: var(--f-display); font-weight: 800; letter-spacing: -.04em; font-size: clamp(9rem, 27vw, 26rem); line-height: .8; height: .8em; overflow: hidden; margin-bottom: -.06em; font-variant-numeric: tabular-nums; transition: color .5s ease; }
+/* Intro (desktop, first visit): a centred 00→15 counter on a hairline; at 15 the
+   screen splits open along that line to reveal the page. */
+.pl-half { position: absolute; left: 0; right: 0; height: 50%; background: var(--ink); will-change: transform; }
+.pl-half--top { top: 0; display: flex; align-items: flex-end; justify-content: center; }
+.pl-half--bot { top: 50%; display: flex; align-items: flex-start; justify-content: center; }
+.pl-logo { position: absolute; left: var(--gutter); top: clamp(26px, 3.2vw, 44px); width: clamp(92px, 7.5vw, 120px); height: auto; }
+.pl-label, .pl-foot { position: absolute; font-family: var(--f-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: rgba(246, 243, 236, .45); }
+.pl-label { right: var(--gutter); top: clamp(34px, 3.6vw, 52px); }
+.pl-foot { left: var(--gutter); bottom: clamp(26px, 3.2vw, 44px); }
+.pl-foot--r { left: auto; right: var(--gutter); }
+.pl-count {
+  font-family: var(--f-display); font-weight: 800; letter-spacing: -.045em; line-height: .78;
+  font-size: clamp(7rem, 19vw, 17rem); font-variant-numeric: tabular-nums;
+  margin-bottom: clamp(14px, 2.2vh, 26px); color: var(--paper); transition: color .5s ease;
+}
 .pl-count.is-done { color: var(--mint); }
-.pl-col { display: flex; flex-direction: column; will-change: transform; }
-.pl-col > span { display: block; height: .8em; line-height: .8em; }
-.pl-side { display: grid; gap: 22px; justify-items: end; padding-bottom: clamp(10px, 1.6vw, 24px); }
-.pl-words { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; text-align: right; }
-.pl-words li { font-family: var(--f-display); font-weight: 650; letter-spacing: -.03em; font-size: clamp(1.4rem, 2.6vw, 2.5rem); line-height: 1.05; color: rgba(246, 243, 236, .18); transition: color .45s ease; }
-.pl-words li.on { color: var(--paper); }
-.pl-words li.on:last-child { color: var(--mint); }
-.pl-bar { width: clamp(180px, 22vw, 320px); height: 1px; background: rgba(246, 243, 236, .15); }
-.pl-bar i { display: block; height: 100%; background: var(--mint); transform-origin: left; transform: scaleX(0); }
-@media (max-width: 760px) { .pl-bottom { flex-direction: column; align-items: flex-start; } .pl-side { justify-items: start; } .pl-words { text-align: left; } }
+.pl-word { margin-top: clamp(16px, 2.6vh, 30px); overflow: hidden; padding: 0 .1em .1em; }
+.pl-word span { display: inline-block; font-family: var(--f-serif); font-style: italic; font-size: clamp(1.7rem, 3vw, 2.7rem); line-height: 1.1; color: rgba(246, 243, 236, .85); }
+.pl-line { position: absolute; left: var(--gutter); right: var(--gutter); top: 50%; height: 1px; background: rgba(246, 243, 236, .12); z-index: 2; }
+.pl-line i { display: block; height: 100%; background: var(--mint); transform-origin: left; transform: scaleX(0); }
 
 .curtain {
   display: block; position: fixed; inset: 0; z-index: 990; background: var(--indigo); pointer-events: none;
