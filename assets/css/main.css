@@ -2088,3 +2088,7 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
   .nav__item:hover .mf-gauge .fg, .nav__item:focus-within .mf-gauge .fg { stroke-dashoffset: 28; }
   .nav__item:hover .mf-bars i::after, .nav__item:focus-within .mf-bars i::after { transform: scaleX(var(--v)); }
 }
+/* Email fields on light backgrounds (newsletter block): readable placeholder and a clear focus ring */
+.newsletter .mini-form input { color: var(--ink); }
+.newsletter .mini-form input::placeholder { color: #8a8698; opacity: 1; }
+.newsletter .mini-form:focus-within { box-shadow: inset 0 0 0 1.5px var(--indigo), 0 0 0 4px rgba(74, 54, 240, .12) !important; }
