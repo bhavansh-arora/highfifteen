@@ -83,6 +83,7 @@ It is a static site: upload the repo root to Netlify, Vercel, Cloudflare Pages o
   Everything respects `prefers-reduced-motion` and still works with JavaScript off.
 - Type: Bricolage Grotesque (display, optical sizing), Instrument Serif italic accents, Plus Jakarta Sans (body), JetBrains Mono (labels), all self-hosted.
 - Accessibility: skip link, keyboard-friendly tabs and accordions, visible focus states, alt text.
+- Caching: the build stamps CSS/JS links with a content fingerprint (`?v=…`), so visitors never get a new page with an old cached stylesheet.
 - SEO: unique titles and descriptions, Open Graph images, canonical URLs, JSON-LD, sitemap and robots.txt.
 
 Designed and built by Code Bunny.

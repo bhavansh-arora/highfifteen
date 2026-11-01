@@ -169,6 +169,13 @@ function journalTags(html) {
   return html;
 }
 
+const crypto = require('crypto');
+const fpCache = {};
+function fingerprint(file) {
+  if (!fpCache[file]) fpCache[file] = crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, file))).digest('hex').slice(0, 8);
+  return fpCache[file];
+}
+
 // ---------- build ----------
 const pagesDir = path.join(SRC, 'pages');
 const pages = fs.readdirSync(pagesDir).filter((f) => f.endsWith('.html')).sort();
@@ -198,7 +205,10 @@ function writePage(file, meta, body) {
   // Mask-wipe reveals on content images site-wide (hero images animate with the header instead)
   main = main.replace(/<div class="(media-card(?: media-card--\w+)?|post__img)"(?![^>]*data-(?:clip|wipe))/g, (m, cls, off, str) =>
     /page-hero__media|article-cover/.test(str.slice(Math.max(0, off - 160), off)) ? m : `${m} data-wipe`);
-  const out = render(head, vars) + render(hdr, vars) + main + render(footer, vars);
+  let out = render(head, vars) + render(hdr, vars) + main + render(footer, vars);
+  // Cache-busting: stamp CSS/JS links with a fingerprint of the file's contents, so browsers never mix
+  // a new page with an old cached stylesheet or script after an update.
+  out = out.replace(/(["'])(assets\/(?:css|js|vendor)\/[\w.-]+\.(?:css|js))\1/g, (m, q, f) => `${q}${f}?v=${fingerprint(f)}${q}`);
   const leftover = out.match(/\{\{[^}]+\}\}|<x-[a-z]+/);
   if (leftover) throw new Error(`Unrendered token in ${file}: ${leftover[0]}`);
   fs.writeFileSync(path.join(ROOT, file), out);
