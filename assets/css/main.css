@@ -2112,3 +2112,12 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 14px 34px -12px rgba(13, 11, 31, .55), inset 0 0 0 1px rgba(246, 243, 236, .12); font-weight: 650; font-size: 14.5px; }
 .dock__ic { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--mint); color: var(--ink); }
 .dock__ic svg { width: 16px; height: 16px; }
+
+/* ---------- Transparent status bar (mobile) ----------
+   No theme-color, so the phone's status bar shows the page behind it.
+   The header clears the notch when the page runs edge-to-edge. */
+.site-header { padding-top: calc(env(safe-area-inset-top, 0px) + 14px); }
+@media (max-width: 520px) {
+  .site-header { padding-top: calc(env(safe-area-inset-top, 0px) + 10px); }
+}
+.menu { padding-top: calc(env(safe-area-inset-top, 0px) + var(--header-h) + 40px); }
