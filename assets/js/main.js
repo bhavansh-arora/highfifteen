@@ -84,14 +84,11 @@
         .to('.pl-half--bot', { yPercent: 100, duration: 1, ease: 'power4.inOut', onStart: function () { setTimeout(finishIntro, 120); } }, 1.9)
         .set('.preloader', { display: 'none' });
     } else if (h.classList.contains('is-entering') && g) {
+      // Arrival: the cover (destination name printed on it) carries straight on upward. No separate text steps.
       var lbl = $('[data-curtain-label]'); if (lbl) lbl.textContent = store.get('hf-nav-label') || '';
-      // .is-active keeps the cover visible after finishIntro removes .is-entering mid-lift
-      var curEl = $('.curtain'); curEl.classList.add('is-active');
-      g.timeline({ onComplete: function () { curEl.classList.remove('is-active'); g.set('.curtain, .curtain__label span, .curtain__line i, .curtain__kicker, .curtain__logo', { clearProps: 'all' }); } })
-        .to('.curtain__label span', { yPercent: -110, duration: .55, ease: 'power3.in' }, .35)
-        .to('.curtain__kicker, .curtain__logo', { opacity: 0, duration: .3 }, .35)
-        .to('.curtain__line i', { scaleX: 0, transformOrigin: 'right center', duration: .5, ease: 'power3.in' }, .35)
-        .fromTo('.curtain', { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .95, ease: 'power4.inOut', onStart: function () { setTimeout(finishIntro, 300); } }, .7);
+      var curEl = $('.curtain'); curEl.classList.add('is-active');   // stays visible after .is-entering is removed
+      g.timeline({ onComplete: function () { curEl.classList.remove('is-active'); g.set('.curtain', { clearProps: 'all' }); } })
+        .fromTo(curEl, { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .7, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 120); } }, .02);
     } else {
       store.set('hf-seen', '1');
       finishIntro();
@@ -134,14 +131,8 @@
     var label = pageName(url.pathname); store.set('hf-nav-label', label);
     var cur = $('.curtain'); cur.classList.add('is-active');
     var lblEl = $('[data-curtain-label]'); if (lblEl) lblEl.textContent = label;
-    g.set(cur, { y: w.innerHeight * .14, yPercent: 100 });
-    g.set('.curtain__label span', { yPercent: 110 }); g.set('.curtain__line i', { scaleX: 0, transformOrigin: 'left center' }); g.set('.curtain__kicker, .curtain__logo', { opacity: 0 });
-    g.timeline()
-      .to(cur, { y: 0, yPercent: 0, duration: .7, ease: 'power4.inOut' })
-      .to('.curtain__logo, .curtain__kicker', { opacity: 1, duration: .35 }, .45)
-      .to('.curtain__label span', { yPercent: 0, duration: .6, ease: 'expo.out' }, .5)
-      .to('.curtain__line i', { scaleX: 1, duration: .55, ease: 'power3.inOut' }, .55)
-      .add(function () { location.href = url.href; }, 1.05);
+    // Exit: one motion. The cover rises with the name already on it, then the next page loads.
+    g.fromTo(cur, { y: w.innerHeight * .14, yPercent: 100 }, { y: 0, yPercent: 0, duration: .5, ease: 'power3.inOut', onComplete: function () { location.href = url.href; } });
   });
   w.addEventListener('pageshow', function (e) {
     if (e.persisted) { h.classList.remove('is-entering'); if (w.gsap) w.gsap.set('.curtain', { clearProps: 'all' }); }

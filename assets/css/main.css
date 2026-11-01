@@ -2002,3 +2002,8 @@ html { overflow-x: hidden; }
   .hv-bleed__img::after { background: linear-gradient(180deg, rgba(13, 11, 31, .35) 0%, rgba(13, 11, 31, .55) 45%, var(--ink) 100%); }
   .hv-bleed__grid { padding-top: 26svh; }
 }
+
+/* Page transition v3: everything on the cover is static, so it moves as one piece with the cover */
+.curtain__label span { transform: none !important; }
+.curtain__kicker, .curtain__logo { opacity: 1 !important; }
+.curtain__line i { transform: scaleX(1) !important; }
