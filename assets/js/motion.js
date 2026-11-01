@@ -170,7 +170,7 @@
   });
 
   /* ---------- Footer giant word ---------- */
-  /* ---------- Footer wordmark: letters filled with Vanessa's painting ----------
+  /* ---------- Footer wordmark: outline letters that fill with mint on scroll ----------
      Each letter clips the same wide painting texture, offset by its position,
      so the word reads as one continuous canvas. */
   var mega = $('[data-mega]');
@@ -188,8 +188,11 @@
     paint(); w.addEventListener('resize', paint);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(paint);
     g.fromTo(letters, { yPercent: 80, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.2, ease: 'expo.out', stagger: .045,
-      scrollTrigger: { trigger: mega, start: 'top 95%', once: true, onEnter: function () { setTimeout(function () { mega.classList.add('is-lit'); }, 900); } },
+      scrollTrigger: { trigger: mega, start: 'top 95%', once: true },
       onComplete: function () { g.set(letters, { clearProps: 'transform' }); } });
+    // Outline letters fill with mint, one after another, as you scroll into the footer
+    g.fromTo(letters, { '--fill': '0%' }, { '--fill': '100%', ease: 'none', stagger: .12,
+      scrollTrigger: { trigger: mega, start: 'top 98%', end: 'bottom bottom', scrub: .4 } });
   }
 
   /* ---------- "We want you to feel": outline words fill as you scroll ---------- */
@@ -219,8 +222,8 @@
   /* ---------- Mask-wipe image reveals ---------- */
   $$('[data-wipe]').forEach(function (el) {
     var img = $('img', el);
-    var tl = g.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', once: true }, onComplete: function () { el.classList.add('is-wiped'); g.set(el, { clearProps: 'clipPath' }); } });
-    tl.to(el, { clipPath: 'inset(0% 0 0 0 round 0px)', duration: 1.3, ease: 'expo.inOut' }, 0);
+    var tl = g.timeline({ scrollTrigger: { trigger: el, start: 'top 96%', once: true }, onComplete: function () { el.classList.add('is-wiped'); g.set(el, { clearProps: 'clipPath' }); } });
+    tl.fromTo(el, { clipPath: 'inset(0% 0% 100% 0% round 0px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1, ease: 'power4.out' }, 0);
     if (img) tl.to(img, { scale: 1, duration: 1.8, ease: 'expo.out' }, .1);
   });
 
@@ -254,7 +257,7 @@
       var tl = g.timeline({ scrollTrigger: { trigger: card, start: 'top 92%', once: true } });
       tl.fromTo(card, { y: 48, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'power3.out', clearProps: 'transform' }, 0);
       if (media) {
-        tl.fromTo(media, { clipPath: 'inset(100% 0% 0% 0% round 16px)' }, { clipPath: 'inset(0% 0% 0% 0% round 16px)', duration: .9, ease: 'expo.inOut' }, .05);
+        tl.fromTo(media, { clipPath: 'inset(0% 0% 100% 0% round 16px)' }, { clipPath: 'inset(0% 0% 0% 0% round 16px)', duration: .8, ease: 'power4.out' }, 0);
         tl.fromTo(img, { scale: 1.3 }, { scale: 1.12, duration: 1.3, ease: 'expo.out' }, .05);
       }
       if (num) tl.fromTo(num, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .7, ease: 'expo.out' }, .35);

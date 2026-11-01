@@ -1635,7 +1635,7 @@ html:not(.motion-ok) .footer-mega, .footer-mega:not(:has(.ml)) { color: var(--mi
 .footer-mega.is-lit .ml { color: transparent; }
 
 /* ---------- Mask-wipe image reveals ---------- */
-.motion-ok [data-wipe] { clip-path: inset(100% 0 0 0 round 0px); }
+.motion-ok [data-wipe] { clip-path: inset(0 0 100% 0 round 0px); }   /* opens top-down, towards the direction of scroll */
 .motion-ok [data-wipe].is-wiped { clip-path: none; }
 .motion-ok [data-wipe] img { transform: scale(1.18); }
 .sticker__core { position: relative; z-index: 1; }
@@ -2007,3 +2007,18 @@ html { overflow-x: hidden; }
 .curtain__label span { transform: none !important; }
 .curtain__kicker, .curtain__logo { opacity: 1 !important; }
 .curtain__line i { transform: scaleX(1) !important; }
+
+/* Footer wordmark v3: thin mint outlines that fill solid mint left to right (no painting texture) */
+.footer-mega .ml, .footer-mega.is-lit .ml {
+  --fill: 0%;
+  color: transparent !important;
+  -webkit-text-stroke: 1.2px rgba(131, 239, 192, .45) !important;
+  background-image: linear-gradient(var(--mint), var(--mint)) !important;
+  background-repeat: no-repeat !important;
+  background-size: var(--fill) 100% !important;
+  background-position: 0 0 !important;
+  -webkit-background-clip: text; background-clip: text;
+  transition: transform .55s cubic-bezier(.34, 1.7, .64, 1) !important;
+}
+@media (hover: hover) { .footer-mega .ml:hover, .footer-mega.is-lit .ml:hover { transform: translateY(-10%); filter: none; } }
+html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
