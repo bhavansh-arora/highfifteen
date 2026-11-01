@@ -2079,3 +2079,12 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
 .mini-case--cta .cc-intro__btn { margin-top: 8px; }
 .mini-case--cta .cc-intro__btn { align-self: flex-start; color: var(--ink); font-family: var(--f-body); font-size: 14.5px; font-weight: 650; letter-spacing: 0; text-transform: none; }
 .mini-case--cta .cc-intro__btn svg { width: 16px; height: 16px; display: inline-block; }
+/* Pressure Check preview: filled by default (touch screens, keyboard); animates in on hover only where hover exists */
+.mf-gauge .fg { stroke-dashoffset: 28; }
+.mf-bars i::after { transform: scaleX(var(--v)); }
+@media (hover: hover) and (pointer: fine) {
+  .mf-gauge .fg { stroke-dashoffset: 100; }
+  .mf-bars i::after { transform: scaleX(0); }
+  .nav__item:hover .mf-gauge .fg, .nav__item:focus-within .mf-gauge .fg { stroke-dashoffset: 28; }
+  .nav__item:hover .mf-bars i::after, .nav__item:focus-within .mf-bars i::after { transform: scaleX(var(--v)); }
+}
