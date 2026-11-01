@@ -88,7 +88,7 @@
       var lbl = $('[data-curtain-label]'); if (lbl) lbl.textContent = store.get('hf-nav-label') || '';
       var curEl = $('.curtain'); curEl.classList.add('is-active');   // stays visible after .is-entering is removed
       g.timeline({ onComplete: function () { curEl.classList.remove('is-active'); g.set('.curtain', { clearProps: 'all' }); } })
-        .fromTo(curEl, { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: .7, ease: 'power3.inOut', onStart: function () { setTimeout(finishIntro, 120); } }, .02);
+        .fromTo(curEl, { y: 0, yPercent: 0 }, { y: -w.innerHeight * .14, yPercent: -100, duration: 1.05, ease: 'power4.inOut', onStart: function () { setTimeout(finishIntro, 250); } }, .2);
     } else {
       store.set('hf-seen', '1');
       finishIntro();
@@ -132,7 +132,11 @@
     var cur = $('.curtain'); cur.classList.add('is-active');
     var lblEl = $('[data-curtain-label]'); if (lblEl) lblEl.textContent = label;
     // Exit: one motion. The cover rises with the name already on it, then the next page loads.
-    g.fromTo(cur, { y: w.innerHeight * .14, yPercent: 100 }, { y: 0, yPercent: 0, duration: .5, ease: 'power3.inOut', onComplete: function () { location.href = url.href; } });
+    // The mint line draws across in step with the cover (same timing), then a short hold on the name.
+    g.timeline({ onComplete: function () { location.href = url.href; } })
+      .fromTo(cur, { y: w.innerHeight * .14, yPercent: 100 }, { y: 0, yPercent: 0, duration: .9, ease: 'power4.inOut' }, 0)
+      .fromTo('.curtain__line i', { scaleX: 0 }, { scaleX: 1, duration: .9, ease: 'power3.inOut' }, 0)
+      .to({}, { duration: .25 });
   });
   w.addEventListener('pageshow', function (e) {
     if (e.persisted) { h.classList.remove('is-entering'); if (w.gsap) w.gsap.set('.curtain', { clearProps: 'all' }); }

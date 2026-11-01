@@ -1655,7 +1655,6 @@ html:not(.motion-ok) .footer-mega, .footer-mega:not(:has(.ml)) { color: var(--mi
 }
 .footer-mega.is-lit .ml { --cov: 100%; }
 @media (hover: hover) { .footer-mega.is-lit .ml:hover { --cov: 0%; transition-delay: 0s; filter: none; } }
-@media (hover: none), (max-width: 900px) { .rings circle, .sticker svg.ring { animation: none; } }
 
 /* ==========================================================================
    Pathways v2 — editorial tab list, auto-play progress, duotone photo panel
@@ -2006,7 +2005,7 @@ html { overflow-x: hidden; }
 /* Page transition v3: everything on the cover is static, so it moves as one piece with the cover */
 .curtain__label span { transform: none !important; }
 .curtain__kicker, .curtain__logo { opacity: 1 !important; }
-.curtain__line i { transform: scaleX(1) !important; }
+.curtain__line i { transform: scaleX(1); transform-origin: left center; }
 
 /* Footer wordmark v3: thin mint outlines that fill solid mint left to right (no painting texture) */
 .footer-mega .ml, .footer-mega.is-lit .ml {
