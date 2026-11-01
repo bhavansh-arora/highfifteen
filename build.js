@@ -205,6 +205,9 @@ function writePage(file, meta, body) {
   // Mask-wipe reveals on content images site-wide (hero images animate with the header instead)
   main = main.replace(/<div class="(media-card(?: media-card--\w+)?|post__img)"(?![^>]*data-(?:clip|wipe))/g, (m, cls, off, str) =>
     /page-hero__media|article-cover/.test(str.slice(Math.max(0, off - 160), off)) ? m : `${m} data-wipe`);
+  // Start the header in the right colour so it never flashes light before the script runs
+  const firstSection = (main.match(/<(?:section|header)\b[^>]*class="[^"]*\b(?:page-hero|hero)\b[^"]*"[^>]*>/) || [''])[0];
+  if (/data-header="dark"/.test(firstSection)) hdr = hdr.replace('<header class="site-header"', '<header class="site-header on-dark"');
   let out = render(head, vars) + render(hdr, vars) + main + render(footer, vars);
   // Cache-busting: stamp CSS/JS links with a fingerprint of the file's contents, so browsers never mix
   // a new page with an old cached stylesheet or script after an update.
