@@ -2021,3 +2021,22 @@ html { overflow-x: hidden; }
 }
 @media (hover: hover) { .footer-mega .ml:hover, .footer-mega.is-lit .ml:hover { transform: translateY(-10%); filter: none; } }
 html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
+
+/* Portrait photos in service cards: taller on phones so faces are never cropped */
+@media (max-width: 959px) { .svc-card__media:has(img[style*="50% 12%"]), .svc-card__media:has(img[style*="50% 15%"]) { aspect-ratio: 4 / 4.4; } }
+
+/* "More client stories" card: photo mosaic + headline + button instead of a flat mint block */
+.case-card--intro { background: var(--ink-3); color: var(--paper); justify-content: space-between; gap: 18px; padding: 14px; box-shadow: inset 0 0 0 1px rgba(131, 239, 192, .25); }
+.cc-mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1; min-height: 0; }
+.cc-mosaic span { position: relative; overflow: hidden; border-radius: 16px; min-height: 110px; }
+.cc-mosaic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.2); transition: transform 1s var(--ease); }
+.cc-mosaic span::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(13, 11, 31, .75), transparent 55%); }
+.cc-mosaic b { position: absolute; left: 12px; bottom: 10px; z-index: 2; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--paper); }
+@media (hover: hover) { .case-card--intro:hover .cc-mosaic img { transform: scale(1.06); } }
+.cc-intro__body { display: grid; gap: 10px; padding: 8px 12px 12px; }
+.cc-intro__body .mono { color: var(--mint); }
+.cc-intro__t { margin: 0; font-family: var(--f-display); font-weight: 700; letter-spacing: -.03em; line-height: 1; font-size: clamp(1.7rem, 2.6vw, 2.4rem); }
+.cc-intro__btn { justify-self: start; display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; padding: 12px 18px; border-radius: 999px; background: var(--mint); color: var(--ink); font-weight: 650; font-size: 14.5px; }
+.cc-intro__btn svg { width: 16px; height: 16px; }
+@media (max-width: 1079px) { .case-card--intro { min-height: 0; } .cc-mosaic span { min-height: 0; aspect-ratio: 1; } }
+@media (max-width: 1079px) { .cc-mosaic { flex: none; align-content: start; } }
