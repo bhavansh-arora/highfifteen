@@ -2042,3 +2042,40 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
 @media (max-width: 1079px) { .cc-mosaic { flex: none; align-content: start; } }
 /* The spinning badge ring is round: clip it to its circle so its rotating square box never pokes past the screen edge */
 .sticker { overflow: hidden; border-radius: 50%; }
+
+/* Services menu: Pressure Check card shows a mini result preview that animates when the menu opens */
+.mega__feature { justify-content: space-between; }
+.mf-preview { display: flex; align-items: center; gap: 16px; padding: 14px; border-radius: 16px; background: rgba(246, 243, 236, .05); box-shadow: inset 0 0 0 1px rgba(246, 243, 236, .1); margin-bottom: auto; }
+.mf-gauge { position: relative; width: 74px; height: 74px; flex: none; }
+.mf-gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.mf-gauge circle { fill: none; stroke-width: 9; }
+.mf-gauge .bg { stroke: rgba(246, 243, 236, .12); }
+.mf-gauge .fg { stroke: var(--mint); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.2s cubic-bezier(.16, 1, .3, 1) .15s; }
+.mf-gauge span { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; line-height: 1; }
+.mf-gauge b { font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -.04em; color: var(--paper); }
+.mf-gauge small { font-family: var(--f-mono); font-size: 9px; color: rgba(246, 243, 236, .55); margin-top: 2px; }
+.mf-bars { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; gap: 9px; }
+.mf-bars li { display: grid; gap: 5px; }
+.mf-bars span { font-family: var(--f-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: rgba(246, 243, 236, .6); }
+.mf-bars i { display: block; height: 4px; border-radius: 4px; background: rgba(246, 243, 236, .12); position: relative; overflow: hidden; }
+.mf-bars i::after { content: ''; position: absolute; inset: 0; background: var(--mint); border-radius: inherit; transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(.16, 1, .3, 1); }
+.mf-bars li:nth-child(2) i::after { background: var(--sun); transition-delay: .1s; }
+.mf-bars li:nth-child(3) i::after { transition-delay: .2s; }
+.mf-bars li:nth-child(1) i::after { transition-delay: .05s; }
+.nav__item:hover .mf-gauge .fg, .nav__item:focus-within .mf-gauge .fg { stroke-dashoffset: 28; }
+.nav__item:hover .mf-bars i::after, .nav__item:focus-within .mf-bars i::after { transform: scaleX(var(--v)); }
+
+/* Case studies: "What would your story be?" card, your logo among the client logos */
+.mini-case--cta { background: var(--ink-3); color: var(--paper); box-shadow: inset 0 0 0 1px rgba(131, 239, 192, .25); justify-content: space-between; gap: 10px; }
+.mini-case--cta::before { display: none; }
+.mini-case--cta > span:not(.cc-intro__btn) { margin-top: auto; }
+.mc-logos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mc-logos > span { position: relative; aspect-ratio: 1.4; border-radius: 14px; display: grid; place-items: center; background: rgba(246, 243, 236, .04); }
+.mini-case .mc-logos img { position: static; width: auto; height: auto; max-width: 70%; max-height: 38%; object-fit: contain; z-index: auto; filter: brightness(0) invert(1); opacity: .4; transition: opacity .4s; }
+.mc-slot { border: 1.5px dashed var(--mint); color: var(--mint); font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; text-align: center; line-height: 1.3; padding: 6px; animation: mcPulse 2.4s ease-in-out infinite; }
+@keyframes mcPulse { 0%, 100% { background: rgba(131, 239, 192, .04); } 50% { background: rgba(131, 239, 192, .14); } }
+@media (hover: hover) { .mini-case--cta:hover .mc-logos img { opacity: .65; } .mini-case--cta:hover img { transform: none; } }
+.mini-case--cta h3 { margin-top: 4px; }
+.mini-case--cta .cc-intro__btn { margin-top: 8px; }
+.mini-case--cta .cc-intro__btn { align-self: flex-start; color: var(--ink); font-family: var(--f-body); font-size: 14.5px; font-weight: 650; letter-spacing: 0; text-transform: none; }
+.mini-case--cta .cc-intro__btn svg { width: 16px; height: 16px; display: inline-block; }
