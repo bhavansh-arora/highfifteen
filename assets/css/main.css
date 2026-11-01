@@ -2092,3 +2092,14 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
 .newsletter .mini-form input { color: var(--ink); }
 .newsletter .mini-form input::placeholder { color: #8a8698; opacity: 1; }
 .newsletter .mini-form:focus-within { box-shadow: inset 0 0 0 1.5px var(--indigo), 0 0 0 4px rgba(74, 54, 240, .12) !important; }
+
+/* Phones/tablets: compact "Book" button in the header replaces the floating bottom bar
+   (iOS tints its browser bar to match a coloured bar at the bottom edge) */
+.nav__book { display: none; }
+@media (max-width: 1139px) {
+  .nav__book { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 16px 0 18px; border-radius: 999px; background: var(--mint); color: var(--ink); font-weight: 650; font-size: 14px; }
+  .nav__book svg { width: 15px; height: 15px; }
+  .nav__actions { gap: 6px; }
+}
+@media (max-width: 380px) { [data-burger-label] { display: none; } .burger { padding: 0 7px; gap: 0; } .nav__book { padding: 0 14px 0 16px; } }
+.dock { display: none !important; }
