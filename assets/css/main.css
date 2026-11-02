@@ -2139,5 +2139,14 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
   .site-header.is-hidden { transform: translateY(calc(-100% - 40px)); }
   .menu { translate: 0 -120%; transition: clip-path .9s var(--ease-in-out), visibility 0s .9s, translate 0s .9s; }
   .menu-open .menu { translate: none; transition: clip-path .9s var(--ease-in-out), visibility 0s, translate 0s; }
-  .read-progress { display: none; }
+  .read-progress { top: 8px; }
+}
+
+/* ---------- White status bar on phones ----------
+   Phone browsers always paint a solid band behind the clock. It stays
+   the site's off-white everywhere: theme-color sets it for Chrome and
+   Android, and iOS Safari reads this fixed strip at the top edge. */
+.topframe { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .topframe { display: block; position: fixed; top: 0; left: 0; right: 0; height: 8px; z-index: 960; pointer-events: none; background: var(--paper); }
 }
