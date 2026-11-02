@@ -2121,3 +2121,18 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
   .site-header { padding-top: calc(env(safe-area-inset-top, 0px) + 10px); }
 }
 .menu { padding-top: calc(env(safe-area-inset-top, 0px) + var(--header-h) + 40px); }
+
+/* ---------- Form steps: same layout in Safari and Chrome ----------
+   Safari draws a legend outside grid flow, so steps use block flow. */
+.fstep.is-active { display: block; }
+.fstep.is-active > * + * { margin-top: 26px; }
+.fstep legend { float: none; display: block; width: 100%; margin: 0; padding: 0; }
+.fstep__title { display: block; }
+.fstep__sub { display: block; margin-top: 10px; font-family: var(--f-body); font-size: 1rem; font-weight: 400; letter-spacing: 0; line-height: 1.6; color: var(--muted); }
+
+/* ---------- iOS 26 Safari bar tint ----------
+   Safari colours the status bar from a fixed strip at the top edge.
+   main.js keeps it matched to the section underneath. */
+.sbar { position: fixed; top: 0; left: 0; right: 0; height: 8px; z-index: 901; pointer-events: none; background: var(--paper); transition: background-color .35s ease; }
+.site-header.on-dark + .sbar { background: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .sbar { display: none; } }
