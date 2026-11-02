@@ -167,26 +167,7 @@
       var foot = $('.site-footer'); var nearFoot = foot && foot.getBoundingClientRect().top < w.innerHeight;
       dock.classList.toggle('is-on', past && !nearFoot);
     }
-    syncBar();
     lastY = y; ticking = false;
-  }
-  /* iOS 26 Safari tints its status bar from the fixed strip at the top edge,
-     so keep that strip the colour of whatever section sits under it. */
-  var sbar = $('[data-sbar]'), sbarColor = '', menuEl = $('#menu');
-  function syncBar() {
-    if (!sbar || getComputedStyle(sbar).display === 'none') return;
-    var c = '';
-    if (h.classList.contains('menu-open')) c = getComputedStyle(menuEl || d.body).backgroundColor;
-    else {
-      var el = d.elementFromPoint(w.innerWidth / 2, 2);
-      while (el && el !== d.documentElement) {
-        var bg = getComputedStyle(el).backgroundColor, m = bg.match(/[\d.]+/g);
-        if (m && (m.length < 4 || +m[3] > .5) && el.getBoundingClientRect().width >= w.innerWidth * .98) { c = bg; break; }
-        el = el.parentElement;
-      }
-      if (!c) c = getComputedStyle(d.body).backgroundColor;
-    }
-    if (c !== sbarColor) { sbarColor = c; sbar.style.backgroundColor = c; }
   }
   w.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
@@ -196,7 +177,6 @@
   function openMenu() {
     h.classList.add('menu-open'); burger.setAttribute('aria-expanded', 'true'); menu.setAttribute('aria-hidden', 'false');
     $('[data-burger-label]').textContent = 'Close'; header.classList.remove('is-hidden'); header.classList.add('on-dark');
-    syncBar();
     if (lenis) lenis.stop(); else d.body.style.overflow = 'hidden';
   }
   function closeMenu() {

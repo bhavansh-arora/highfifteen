@@ -2130,9 +2130,14 @@ html:not(.motion-ok) .footer-mega .ml { --fill: 100%; }
 .fstep__title { display: block; }
 .fstep__sub { display: block; margin-top: 10px; font-family: var(--f-body); font-size: 1rem; font-weight: 400; letter-spacing: 0; line-height: 1.6; color: var(--muted); }
 
-/* ---------- iOS 26 Safari bar tint ----------
-   Safari colours the status bar from a fixed strip at the top edge.
-   main.js keeps it matched to the section underneath. */
-.sbar { position: fixed; top: 0; left: 0; right: 0; height: 8px; z-index: 901; pointer-events: none; background: var(--paper); transition: background-color .35s ease; }
-.site-header.on-dark + .sbar { background: var(--ink); }
-@media (hover: hover) and (pointer: fine) { .sbar { display: none; } }
+/* ---------- Transparent status bar on phones ----------
+   iOS Safari paints a solid bar when a fixed element touches the top edge,
+   so on touch screens nothing fixed sits there: the header floats 10px down,
+   the closed menu parks off-screen and the reading bar steps aside. */
+@media (hover: none), (pointer: coarse), (max-width: 1023px) {
+  .site-header { top: calc(env(safe-area-inset-top, 0px) + 10px); padding-top: 0 !important; }
+  .site-header.is-hidden { transform: translateY(calc(-100% - 40px)); }
+  .menu { translate: 0 -120%; transition: clip-path .9s var(--ease-in-out), visibility 0s .9s, translate 0s .9s; }
+  .menu-open .menu { translate: none; transition: clip-path .9s var(--ease-in-out), visibility 0s, translate 0s; }
+  .read-progress { display: none; }
+}
